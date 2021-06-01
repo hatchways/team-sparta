@@ -56,6 +56,7 @@ const SignUpForm = ({ handleSubmit }: Props): JSX.Element => {
             label={<Typography className={classes.label}>E-mail</Typography>}
             fullWidth
             margin="normal"
+            variant="outlined"
             InputLabelProps={{
               shrink: true,
             }}
@@ -75,6 +76,7 @@ const SignUpForm = ({ handleSubmit }: Props): JSX.Element => {
             label={<Typography className={classes.label}>Name</Typography>}
             fullWidth
             margin="normal"
+            variant="outlined"
             InputLabelProps={{
               shrink: true,
             }}
@@ -93,6 +95,7 @@ const SignUpForm = ({ handleSubmit }: Props): JSX.Element => {
             label={<Typography className={classes.label}>Password</Typography>}
             fullWidth
             margin="normal"
+            variant="outlined"
             InputLabelProps={{
               shrink: true,
             }}

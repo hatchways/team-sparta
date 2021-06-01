@@ -51,6 +51,7 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
             label={<Typography className={classes.label}>Email</Typography>}
             fullWidth
             margin="normal"
+            variant="outlined"
             InputLabelProps={{
               shrink: true,
             }}
@@ -67,6 +68,7 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
           />
           <TextField
             id="password"
+            variant="outlined"
             label={<Typography className={classes.label}>Password</Typography>}
             fullWidth
             margin="normal"
