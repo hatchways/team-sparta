@@ -66,19 +66,23 @@ exports.updateContest = asyncHandler(async (req, res, next) => {
     throw new Error("You are not allowed to edit this contest.");
   }
 
-  const createdContest = await contest.updateOne({
-    title,
-    description,
-    price,
-    end_date,
-    images: images ? images : contest.images,
-    creator: req.user.id,
-  });
+  let createdContest = await Contest.findByIdAndUpdate(
+    contestId,
+    {
+      title,
+      description,
+      price,
+      end_date,
+      images: images ? images : contest.images,
+      creator: req.user.id,
+    },
+    { new: true }
+  );
 
   if (createdContest) {
     res.status(201).json({
       success: {
-        contest: contest,
+        contest: createdContest,
       },
     });
   } else {
