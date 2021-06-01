@@ -90,6 +90,20 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
               {isSubmitting ? <CircularProgress style={{ color: 'white' }} /> : 'SIGN IN'}
             </Button>
           </Box>
+          <Box textAlign="center">
+            <Button
+              type="submit"
+              onClick={() => {
+                (values.email = 'testUser@gmail.com'), (values.password = 'test123');
+              }}
+              size="large"
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              {isSubmitting ? <CircularProgress style={{ color: 'white' }} /> : 'USE DEMO ACCOUNT'}
+            </Button>
+          </Box>
           <div style={{ height: 95 }} />
         </form>
       )}
