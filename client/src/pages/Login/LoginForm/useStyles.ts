@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   label: {
     fontSize: 19,
     color: 'rgb(0,0,0,0.4)',
-    paddingLeft: '5px',
+    paddingLeft: 10,
   },
   inputs: {
     marginTop: '.8rem',
@@ -16,19 +16,22 @@ const useStyles = makeStyles((theme) => ({
     padding: '5px',
   },
   forgot: {
-    paddingRight: 10,
-    color: '#3a8dff',
+    paddingRight: 0,
+    color: 'black',
+    textDecoration: 'underline',
   },
   submit: {
     margin: theme.spacing(3, 2, 2),
     padding: 10,
     width: 160,
     height: 56,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: 0,
     marginTop: 49,
     fontSize: 16,
-    backgroundColor: '#3a8dff',
+    backgroundColor: 'black',
     fontWeight: 'bold',
+    filter: 'drop-shadow(0px 2px 6px rgba(74,106,149,0.2))',
+    '&:hover': { color: 'black', backgroundColor: 'white' },
   },
 }));
 
