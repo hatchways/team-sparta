@@ -13,14 +13,19 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-between',
     flexDirection: 'column',
     minHeight: '100vh',
-    paddingTop: 23,
+    paddingTop: 0,
+    minWidth: '100vw',
   },
   welcome: {
     fontSize: 26,
+    textAlign: 'center',
     paddingBottom: 20,
     color: '#000000',
     fontWeight: 700,
-    fontFamily: "'Open Sans'",
+    fontFamily: "'Poppins'",
+  },
+  logInBox: {
+    borderRadius: '5px',
   },
 }));
 
