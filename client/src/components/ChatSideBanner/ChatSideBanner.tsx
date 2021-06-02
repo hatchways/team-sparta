@@ -42,7 +42,7 @@ const ChatSideBanner = ({ loggedInUser }: Props): JSX.Element => {
               border: '1px solid white',
             })}
           >
-            <DashboardNav to="/dashboard/contest" primary="Create Contest" />
+            <DashboardNav to="/dashboard/contestForm" primary="Create Contest" />
           </ThemeProvider>
           <div className={classes.account}>
             <AvatarDisplay loggedIn user={loggedInUser} />
