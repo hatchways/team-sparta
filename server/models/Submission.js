@@ -8,4 +8,4 @@ const submissionSchema = new mongoose.Schema({
   date_created: { type: Date, default: Date.now },
 });
 
-module.exports = Contest = mongoose.model("Submission", submissionSchema);
+module.exports = Submission = mongoose.model("Submission", submissionSchema);
