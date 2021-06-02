@@ -1,7 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: '100vh',
@@ -11,10 +9,15 @@ const useStyles = makeStyles((theme) => ({
   },
   dashboard: { backgroundColor: '#FFFFFF' },
   drawerWrapper: {
-    width: drawerWidth,
+    width: '100%',
     [theme.breakpoints.up('md')]: {
-      width: '300px',
+      width: '100%',
     },
+  },
+  chatTitle: {
+    fontWeight: 700,
+    fontSize: 20,
+    margin: '1rem 0',
   },
 }));
 
