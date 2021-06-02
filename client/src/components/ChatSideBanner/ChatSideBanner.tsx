@@ -1,47 +1,59 @@
-import { ChangeEvent, useState } from 'react';
 import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './useStyles';
 import { User } from '../../interface/User';
 import AvatarDisplay from '../AvatarDisplay/AvatarDisplay';
-import Search from '../Search/Search';
 import AuthMenu from '../AuthMenu/AuthMenu';
+import { AppBar, Toolbar, ThemeProvider } from '@material-ui/core';
+import DashboardNav from '../DashboardNav/DashboardNav';
+import Notification from '../Notification/Notification';
 
 interface Props {
   loggedInUser: User;
-  handleDrawerToggle?: () => void;
+}
+interface MyTheme {
+  border: string;
 }
 
 const ChatSideBanner = ({ loggedInUser }: Props): JSX.Element => {
-  const [search, setSearch] = useState<string>('test');
-  const [newChatUser, setNewChatUser] = useState<User | null>(null);
   const classes = useStyles();
 
-  // React.FormEvent<FormControl & FormControlProps>)
-  const handleChange = (e: ChangeEvent<HTMLInputElement>, newInputValue: string) => {
-    setSearch(newInputValue);
-    if (newChatUser) {
-      setNewChatUser(null);
-    }
-  };
-
   return (
-    <Grid className={classes.chatSideBanner}>
-      <Box className={classes.userPanel}>
-        <AvatarDisplay loggedIn user={loggedInUser} />
-        <Typography className={classes.userText} variant="h5">
-          {loggedInUser.username}
-        </Typography>
-        <AuthMenu />
-      </Box>
-      <Box>
-        <Typography className={classes.chatTitle} variant="h5">
-          Users
-        </Typography>
-        <Search search={search} handleChange={handleChange} />
-      </Box>
-    </Grid>
+    <Box p={1} className={classes.chatSideBanner}>
+      <AppBar className={classes.toolBar}>
+        <Toolbar>
+          <Typography className={classes.title} variant="h4" noWrap>
+            T A T T O O &nbsp; A R T
+          </Typography>
+          <ThemeProvider<MyTheme>
+            theme={(outerTheme) => ({
+              ...outerTheme,
+              border: '',
+            })}
+          >
+            <DashboardNav to="/dashboard/discover" primary="Discover" />
+            <DashboardNav to="/dashboard/message" primary="Message" />
+          </ThemeProvider>
+
+          <Notification />
+          <ThemeProvider<MyTheme>
+            theme={(outerTheme) => ({
+              ...outerTheme,
+              border: '1px solid white',
+            })}
+          >
+            <DashboardNav to="/dashboard/contest" primary="Create Contest" />
+          </ThemeProvider>
+          <div className={classes.account}>
+            <AvatarDisplay loggedIn user={loggedInUser} />
+            <Typography className={classes.userText} variant="h5">
+              {loggedInUser.username}
+            </Typography>
+            <AuthMenu to="/dashboard/profile" />
+          </div>
+        </Toolbar>
+      </AppBar>
+    </Box>
   );
 };
 
