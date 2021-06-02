@@ -49,6 +49,21 @@ exports.createContest = asyncHandler(async (req, res, next) => {
   }
 });
 
+
+/**
+ * Summary.
+ * Authenticated User can update exisintg contests 
+ * Description.
+ * We check to see if the contest exists and if the user is the owner of the contest
+ * If the user and contest are valid then the user can update the following fields
+ * @param String tite
+ * @param String descriptoin
+ * @param Number price
+ * @param Date date
+ * @param [String] images
+ * @returns updatedObject
+ * 
+ */
 exports.updateContest = asyncHandler(async (req, res, next) => {
   const { title, description, price, end_date, images } = req.body;
 
@@ -74,7 +89,6 @@ exports.updateContest = asyncHandler(async (req, res, next) => {
       price,
       end_date,
       images: images ? images : contest.images,
-      creator: req.user.id,
     },
     { new: true }
   );
