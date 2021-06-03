@@ -1,3 +1,5 @@
+// SAVED HERE IF WE CAN FIGURE OUT HOW TO MAKE THIS WORK AS AN EXPORTABLE FUNCTION.
+
 // dependencies
 const aws = require("aws-sdk");
 const multerS3 = require("multer-s3");
@@ -55,4 +57,4 @@ const uploadMultiImage = multer({
   },
 }).array("multiImage", 10); //array is going to be referred to as multi image on front end when we do an axios.post. 10 images per upload is our limit (can change)
 
-module.exports = uploadMultiImage;
+// module.exports = uploadMultiImage;
