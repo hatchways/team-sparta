@@ -7,7 +7,6 @@ import { useSocket } from '../../context/useSocketContext';
 import { useHistory, Switch, Route } from 'react-router-dom';
 import ChatSideBanner from '../../components/ChatSideBanner/ChatSideBanner';
 import { useEffect } from 'react';
-import { Box, Typography } from '@material-ui/core';
 import Discover from '../Discover/Discover';
 import Message from '../Message/Message';
 import Profile from '../Profile/Profile';
