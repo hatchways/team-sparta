@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
     padding: '1rem 1rem',
   },
   link: { textDecoration: 'none' },
+  logo: {
+    width: '100%',
+  },
   accBtn: {
     width: 170,
     height: 54,
@@ -35,6 +38,25 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'right',
     '&:hover': { color: 'black' },
+  },
+  navButton: {
+    width: 300,
+    height: 54,
+    borderRadius: '0%',
+    padding: '1rem 1rem',
+    filter: 'drop-shadow(0px 2px 6px rgba(74,106,149,0.2))',
+    backgroundColor: '#000000',
+    color: '#f4f4f4',
+    boxShadow: 'none',
+    display: 'flex',
+    alignItems: 'left',
+    '&:hover': { color: 'grey' },
+  },
+  container: {
+    float: 'left',
+    alignSelf: 'left',
+    alignItems: 'left',
+    marginLeft: 0,
   },
 }));
 

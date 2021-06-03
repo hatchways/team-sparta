@@ -4,9 +4,11 @@ import useStyles from './useStyles';
 import { User } from '../../interface/User';
 import AvatarDisplay from '../AvatarDisplay/AvatarDisplay';
 import AuthMenu from '../AuthMenu/AuthMenu';
-import { AppBar, Toolbar, ThemeProvider } from '@material-ui/core';
+import { AppBar, Button, Toolbar, ThemeProvider, Container } from '@material-ui/core';
 import DashboardNav from '../DashboardNav/DashboardNav';
 import Notification from '../Notification/Notification';
+import { Link } from 'react-router-dom';
+import Logo from '../../Images/logo.png';
 
 interface Props {
   loggedInUser: User;
@@ -22,17 +24,21 @@ const ChatSideBanner = ({ loggedInUser }: Props): JSX.Element => {
     <Box p={1} className={classes.chatSideBanner}>
       <AppBar className={classes.toolBar}>
         <Toolbar>
-          <Typography className={classes.title} variant="h4" noWrap>
-            T A T T O O &nbsp; A R T
-          </Typography>
+          <Container>
+            <Link to={'/'} className={classes.link}>
+              <Button className={classes.navButton} color="inherit" variant="contained">
+                <img className={classes.logo} src={Logo} alt={'Logo'} />
+              </Button>
+            </Link>
+          </Container>
           <ThemeProvider<MyTheme>
             theme={(outerTheme) => ({
               ...outerTheme,
               border: '',
             })}
           >
-            <DashboardNav to="/dashboard/discover" primary="Discover" />
-            <DashboardNav to="/dashboard/message" primary="Message" />
+            <DashboardNav to="/" primary="Discover" />
+            <DashboardNav to="/message" primary="Message" />
           </ThemeProvider>
 
           <Notification />
@@ -42,14 +48,14 @@ const ChatSideBanner = ({ loggedInUser }: Props): JSX.Element => {
               border: '1px solid white',
             })}
           >
-            <DashboardNav to="/dashboard/contestForm" primary="Create Contest" />
+            <DashboardNav to="/contestForm" primary="Create Contest" />
           </ThemeProvider>
           <div className={classes.account}>
             <AvatarDisplay loggedIn user={loggedInUser} />
             <Typography className={classes.userText} variant="h5">
               {loggedInUser.username}
             </Typography>
-            <AuthMenu to="/dashboard/profile" />
+            <AuthMenu to="/profile" />
           </div>
         </Toolbar>
       </AppBar>
