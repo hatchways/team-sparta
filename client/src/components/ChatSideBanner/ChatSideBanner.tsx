@@ -53,7 +53,7 @@ const ChatSideBanner = ({ loggedInUser }: Props): JSX.Element => {
           <div className={classes.account}>
             <AvatarDisplay loggedIn user={loggedInUser} />
             <Typography className={classes.userText} variant="h5">
-              {loggedInUser.username}
+              {'Account'}
             </Typography>
             <AuthMenu to="/profile" />
           </div>
