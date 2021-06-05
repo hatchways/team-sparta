@@ -3,16 +3,19 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
   chatSideBanner: {
     display: 'flex',
-    padding: '1rem 1rem',
-    width: 'auto',
+    padding: '2rem 2rem',
+    width: '100%',
     [theme.breakpoints.up('md')]: {
       padding: '2rem 2rem',
-      width: '300px',
+      width: '100%',
     },
+    backgroundColor: 'black',
+    alignItems: 'Center',
   },
   toolBar: {
     backgroundColor: 'black',
     color: 'white',
+    justifyContent: 'center',
   },
   account: {
     position: 'relative',
@@ -25,6 +28,23 @@ const useStyles = makeStyles((theme) => ({
       width: 'auto',
     },
     color: 'white',
+  },
+  logo: {
+    width: '100%',
+  },
+  navButton: {
+    width: 300,
+    height: 54,
+    borderRadius: '0%',
+    padding: '1rem 1rem',
+    filter: 'drop-shadow(0px 2px 6px rgba(74,106,149,0.2))',
+    backgroundColor: '#000000',
+    color: '#f4f4f4',
+    boxShadow: 'none',
+    marginRight: 35,
+    display: 'flex',
+    alignItems: 'right',
+    '&:hover': { color: 'grey' },
   },
   navLinks: {
     Button: {

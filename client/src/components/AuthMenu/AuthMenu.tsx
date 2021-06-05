@@ -6,6 +6,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { useAuth } from '../../context/useAuthContext';
 import useStyles from './useStyles';
 import { Link } from 'react-router-dom';
+import useStyles from './useStyles';
 
 interface Props {
   to: string;
@@ -48,7 +49,9 @@ const AuthMenu = ({ to }: Props): JSX.Element => {
         getContentAnchorEl={null}
       >
         <MenuItem>
-          <Link className={classes.link} to={to}>Profile</Link>
+          <Link className={classes.link} to={to}>
+            Profile
+          </Link>
         </MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
