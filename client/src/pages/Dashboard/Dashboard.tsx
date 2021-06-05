@@ -46,7 +46,7 @@ export default function Dashboard(): JSX.Element {
             <Message />
           </Route>
           <Route exact path="/dashboard/profile">
-            <Profile />
+            <Profile loggedIn user={loggedInUser} />
           </Route>
           <Route exact path="/dashboard/editProfile">
             <EditProfile />
