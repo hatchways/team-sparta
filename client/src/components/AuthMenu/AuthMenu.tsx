@@ -4,6 +4,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { useAuth } from '../../context/useAuthContext';
+import useStyles from './useStyles';
 import { Link } from 'react-router-dom';
 import useStyles from './useStyles';
 
