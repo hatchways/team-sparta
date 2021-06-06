@@ -1,5 +1,3 @@
-// SAVED HERE IF WE CAN FIGURE OUT HOW TO MAKE THIS WORK AS AN EXPORTABLE FUNCTION.
-
 // dependencies
 const aws = require("aws-sdk");
 const multerS3 = require("multer-s3");
@@ -19,10 +17,7 @@ const checkFileType = (file, callback) => {
   // allowed filetypes
   const filetypes = /jpeg|jpg|png|gif/;
   //check extension name
-  const extname = filetypes.test(
-    path,
-    extname(file.originalname).toLowerCase()
-  );
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   // Check mimetype to identify file based on format
   const mimetype = filetypes.test(file.mimetype);
   if (mimetype && extname) {
@@ -57,4 +52,4 @@ const uploadMultiImage = multer({
   },
 }).array("multiImage", 10); //array is going to be referred to as multi image on front end when we do an axios.post. 10 images per upload is our limit (can change)
 
-// module.exports = uploadMultiImage;
+module.exports = uploadMultiImage;

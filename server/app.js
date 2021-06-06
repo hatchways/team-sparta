@@ -11,7 +11,7 @@ const logger = require("morgan");
 
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
-const imgRouter = require('./routes/uploadimg')
+const uploadRouter = require('./routes/uploadimg')
 
 
 const contestRouter = require("./routes/contest");
@@ -46,7 +46,7 @@ app.use((req, res, next) => {
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
-app.use('/images', imgRouter)
+app.use('/upload', uploadRouter)
 app.use("/contest", contestRouter);
 
 if (process.env.NODE_ENV === "production") {
