@@ -1,11 +1,7 @@
 // route dependencies
 const express = require("express");
 const router = express.Router();
-const uploadMultiImage = require('../utils/uploadFiles')
-
-
-
-
+const uploadMultiImage = require("../utils/uploadFiles");
 
 // images upload route
 
@@ -33,7 +29,7 @@ router.post("/images-upload", (req, res) => {
         }
         // Here we could save the file name to the database
         res.json({
-          filesArray: filesArray,
+          filesArray: fileArray,
           locationArray: multiImageLocationArray,
         });
       }
