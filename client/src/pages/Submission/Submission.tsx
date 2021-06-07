@@ -67,7 +67,7 @@ export default function Submission(): JSX.Element {
     }
   };
 
-//now displays file names and allows post to AWS
+  //now displays file names and allows post to AWS
 
   return (
     <Grid container spacing={5} direction="column" className={classes.root}>
