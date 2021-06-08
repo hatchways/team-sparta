@@ -97,7 +97,6 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
               type="submit"
               onClick={() => {
                 (values.email = 'testUser@gmail.com'), (values.password = 'test123');
-                (values.email = 'testuser@gmail.com'), (values.password = 'test123');
               }}
               size="large"
               variant="contained"
