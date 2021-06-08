@@ -10,11 +10,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: theme.spacing(25),
     margin: '2rem 2rem',
   },
-  Name: {
+  name: {
     colorTextPrimary: 'black',
     fontWeight: 'bold',
   },
-  ListItems: {
+  listItems: {
     height: '100%',
     marginLeft: '2rem',
   },
