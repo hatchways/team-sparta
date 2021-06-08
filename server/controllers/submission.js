@@ -96,11 +96,11 @@ exports.getAllSubmissions = asyncHandler(async (req, res, next) => {
         }
 
         if(contest.creator.toString() === Creator.toString()){
-            let submissions = await Submission.find({contest_id: contest_id});
+            const submissions = await Submission.find({contest_id: contest_id});
             res.status(200).json({ submissions: submissions });
         }
         else{
-            let submissions = await Submission.find({creator: Creator});
+            const submissions = await Submission.find({creator: Creator});
             res.status(200).json({ submissions: submissions });
         }
     }
@@ -110,7 +110,7 @@ exports.getAllSubmissions = asyncHandler(async (req, res, next) => {
     const submissionId = req.params.id;
     const creator = req.params.creator;
   
-    let submission = await Submission.findById(submissionId);
+    const submission = await Submission.findById(submissionId);
 
     if (!submission) {
       res.status(404);
