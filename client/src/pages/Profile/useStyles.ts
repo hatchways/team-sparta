@@ -3,7 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme: Theme) => ({
   ProfileContent: {
     width: '100%',
-    height: '100%',
+    height: '100vh',
   },
   UserImage: {
     marginTop: '4rem',

@@ -1,6 +1,10 @@
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  ListContainer: {
+    height: '50vh',
+    overflow: 'auto',
+  },
   link: {
     textDecoration: 'none',
     focus: { outline: 0 },

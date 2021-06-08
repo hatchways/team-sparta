@@ -1,11 +1,11 @@
 import { Avatar, Box, Grid, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { contest } from '../../interface/tempContestData';
 import React, { memo } from 'react';
 import useStyles from './useStyles';
+import { Contest } from '../../interface/Contest';
 
 interface Props {
-  data: contest[];
+  data: Contest[];
   route: string;
   message: string;
 }
@@ -15,15 +15,15 @@ const ListView = memo(function ListView({ data, message, route }: Props): JSX.El
   //Displays all objects within data array and provides additional message in case no objects within array
   //enables a link to specific details page. <--- Requires Update when integrating Contest/Submissions
   return (
-    <div>
+    <React.Fragment>
       {data.length > 0 ? (
-        <List>
+        <List className={classes.ListContainer}>
           {data.map((item) => {
             return (
-              <Link className={classes.link} to={route} key={item.id}>
-                <ListItem key={item.id}>
+              <Link className={classes.link} to={route} key={item._id}>
+                <ListItem key={item._id}>
                   <ListItemAvatar>
-                    <Avatar className={classes.img} alt="Profile Image" src={item.images} variant="square" />
+                    <Avatar className={classes.img} alt="Profile Image" src={item.images[0]} variant="square" />
                   </ListItemAvatar>
                   <Grid
                     className={classes.ListItems}
@@ -60,7 +60,7 @@ const ListView = memo(function ListView({ data, message, route }: Props): JSX.El
       ) : (
         <Typography>{message}</Typography>
       )}
-    </div>
+    </React.Fragment>
   );
 });
 
