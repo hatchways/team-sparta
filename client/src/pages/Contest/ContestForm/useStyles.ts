@@ -10,7 +10,6 @@ const useStyles = makeStyles(() => ({
     margin: 30,
     color: '#000000',
     fontWeight: 700,
-    fontFamily: "'Poppins'",
   },
   contestFormBox: {
     borderRadius: '5px',
@@ -24,7 +23,6 @@ const useStyles = makeStyles(() => ({
   contestFormLabel: {
     fontSize: 16,
     fontWeight: 700,
-    fontFamily: "'Poppins'",
   },
   contestTextInput: {
     marginTop: '10px',
