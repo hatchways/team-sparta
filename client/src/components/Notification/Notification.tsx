@@ -30,11 +30,9 @@ const Notification = (): JSX.Element => {
         onClose={handleClose}
         message="this is a notification"
         action={
-          <React.Fragment>
-            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </React.Fragment>
+          <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
         }
       />
     </Box>
