@@ -1,11 +1,7 @@
 // route dependencies
 const express = require("express");
 const router = express.Router();
-const uploadMultiImage = require('../utils/uploadFiles')
-
-
-
-
+const uploadMultiImage = require("../utils/uploadFiles");
 
 // images upload route
 
@@ -27,13 +23,13 @@ router.post("/images-upload", (req, res) => {
           fileLocation;
         const multiImageLocationArray = [];
         for (let i = 0; i < fileArray.length; i++) {
-          fileLocation = fileArray[i].fileLocation;
-          console.log("FILE URL", fileLocation);
+          fileLocation = fileArray[i].location;
           multiImageLocationArray.push(fileLocation);
+          console.log("URLS ", fileLocation);
         }
         // Here we could save the file name to the database
         res.json({
-          filesArray: filesArray,
+          filesArray: fileArray,
           locationArray: multiImageLocationArray,
         });
       }

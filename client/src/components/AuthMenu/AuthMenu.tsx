@@ -6,7 +6,6 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { useAuth } from '../../context/useAuthContext';
 import useStyles from './useStyles';
 import { Link } from 'react-router-dom';
-import useStyles from './useStyles';
 
 interface Props {
   to: string;
