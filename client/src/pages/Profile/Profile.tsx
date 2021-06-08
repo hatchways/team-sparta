@@ -27,7 +27,7 @@ interface Props {
 export default function Profile({ user }: Props): JSX.Element {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const conts = contests;
+  const Contests = contests;
   const [newContest, setNewContest] = useState<contest[]>(Object);
 
   const MyTheme = createMuiTheme({
@@ -70,7 +70,7 @@ export default function Profile({ user }: Props): JSX.Element {
 
   //Reduces the collection of contest to contests that involves the user
   const handleContest = () => {
-    setNewContest(conts.filter((e) => e.creator.indexOf(user.email) !== -1));
+    setNewContest(Contest);
   };
 
   const handleChange = (event: React.ChangeEvent<Record<string, unknown>>, newValue: number) => {
@@ -90,28 +90,28 @@ export default function Profile({ user }: Props): JSX.Element {
   }, []);
 
   return (
-    <Grid className={classes.ProfileContent} container direction="column" alignItems="center">
-      <Avatar className={classes.UserImage} alt="Profile Image" src={`https://robohash.org/${user.email}.png`} />
-      <Typography className={classes.UserName}>{user.username}</Typography>
+    <Grid className={classes.profileContent} container direction="column" alignItems="center">
+      <Avatar className={classes.userImage} alt="Profile Image" src={`https://robohash.org/${user.email}.png`} />
+      <Typography className={classes.userName}>{user.username}</Typography>
       <Link to={'/dashboard/EditProfile'} className={classes.link}>
-        <Button className={classes.Button} color="inherit" variant="contained" disableElevation>
+        <Button className={classes.button} color="inherit" variant="contained" disableElevation>
           Edit Profile
         </Button>
       </Link>
-      <Box className={classes.TabContainer}>
-        <AppBar className={classes.TabBar} position="static" elevation={0}>
+      <Box className={classes.tabContainer}>
+        <AppBar className={classes.tabBar} position="static" elevation={0}>
           <ThemeProvider theme={MyTheme}>
             <Tabs
-              className={classes.Tabs}
+              className={classes.tabs}
               value={value}
               onChange={handleChange}
               textColor="primary"
               variant="fullWidth"
               aria-label="User Content tabs"
             >
-              <Tab className={classes.Tab} label="IN PROGRESS" />
-              <Tab className={classes.Tab} label="COMPLETED" />
-              <Tab className={classes.Tab} label="SUBMISSIONS" />
+              <Tab className={classes.tab} label="IN PROGRESS" />
+              <Tab className={classes.tab} label="COMPLETED" />
+              <Tab className={classes.tab} label="SUBMISSIONS" />
             </Tabs>
           </ThemeProvider>
         </AppBar>
