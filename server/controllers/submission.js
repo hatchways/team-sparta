@@ -15,7 +15,7 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
         fileLocation = fileArray[i].location;
         multiImageLocationArray.push(fileLocation);
     }
-    let files = multiImageLocationArray
+    const files = multiImageLocationArray
     if (contest) {
         const createdSubmission = await Submission.create({
             creator,
