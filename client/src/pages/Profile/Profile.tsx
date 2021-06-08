@@ -70,7 +70,7 @@ export default function Profile({ user }: Props): JSX.Element {
 
   //Reduces the collection of contest to contests that involves the user
   const handleContest = () => {
-    setNewContest(Contest);
+    setNewContest(Contests);
   };
 
   const handleChange = (event: React.ChangeEvent<Record<string, unknown>>, newValue: number) => {
