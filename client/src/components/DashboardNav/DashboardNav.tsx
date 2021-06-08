@@ -12,11 +12,9 @@ const DashboardNav = ({ to, primary }: Props): JSX.Element => {
 
   return (
     <div>
-      <Link to={to} className={classes.link}>
-        <Button className={classes.navButton} color="inherit" variant="contained">
-          {primary}
-        </Button>
-      </Link>
+      <Button component={Link} to={to} className={classes.navButton} color="inherit" variant="contained">
+        {primary}
+      </Button>
     </div>
   );
 };
