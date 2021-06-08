@@ -8,8 +8,6 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
     const { creator, contest_id, is_active, date_Created } = req.body;
    
     let contest = await Contest.findById(contest_id);
-
-    //Grabbing AWS URL to import into submission model
     multiImageLocationArray = [];
     let fileArray = req.files,
         fileLocation;
@@ -18,7 +16,6 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
         multiImageLocationArray.push(fileLocation);
     }
     let files = multiImageLocationArray
-    //Creating a new submission with aws url array and submission data received from front end
     if (contest) {
         const createdSubmission = await Submission.create({
             creator,
@@ -27,7 +24,6 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
             is_active,
             date_Created,
         });
-        //Creating a finding and updating contest to apply submission id to array within contest
         if (createdSubmission) {
             let submissionArr = contest.submissions;
             submissionArr.push(createdSubmission._id);
@@ -36,17 +32,17 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
             const title =contest.title;
             const price =contest.price;
             const description = contest.description;
-            const end_date = contest.end_date
+            const endDate = contest.end_date
             const images = contest.images;
             const submissions = contest.submissions;
-            //
+            
             let createdContest = await Contest.findByIdAndUpdate(
                 contest_id,
                 {
                     title,
                     price,
                     description,
-                    end_date,
+                    endDate,
                     images,
                     submissions,
                 },
@@ -78,16 +74,12 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
 });
 
 exports.getAllSubmissions = asyncHandler(async (req, res, next) => {
-   //Grabs necessary data from req params
     console.log(req.params);
     const contest_id = req.params.id;
     const Creator = req.params.creator;
     console.log("contest id",contest_id);
     console.log("creator", Creator);
-
-    /**
-     * Test to check if ID exists
-     */
+    
     if(!contest_id){
         res.status(404);
         throw new Error("No contest id given");
@@ -95,11 +87,6 @@ exports.getAllSubmissions = asyncHandler(async (req, res, next) => {
         res.status(404);
         throw new Error("No creator id given");
     }
-    /**
-     * Does a check on the specific contest to see if the user is the contest owner,
-     * if the user is the contest owner. output is all submissions within that contest
-     * if the user is not the contest owner shows all submissions related to the user.
-     */
     else{
         let contest = await Contest.findById(contest_id);
         
