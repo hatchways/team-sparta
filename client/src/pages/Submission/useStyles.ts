@@ -56,6 +56,20 @@ const useStyles = makeStyles((theme) => ({
     filter: 'drop-shadow(0px 2px 6px rgba(74,106,149,0.2))',
     '&:hover': { color: 'black', backgroundColor: 'white' },
   },
+
+  preview: {
+    margin: theme.spacing(2, 1, 1),
+    width: 200,
+    height: 200,
+    boxShadow: '5px 10px 10px #888888',
+  },
+
+  deleteIcon: {
+    transition: 'all .5s ease-in-out',
+    '&:hover': {
+      transform: 'scale(1.5)',
+    },
+  },
 }));
 
 export default useStyles;

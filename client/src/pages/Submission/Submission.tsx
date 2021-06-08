@@ -1,28 +1,61 @@
-import React, { useState } from 'react';
-import { Grid, Button, Typography, Box } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Grid, Button, Typography, Box, Snackbar, IconButton } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import useStyles from './useStyles';
 import axios from 'axios';
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import CloseIcon from '@material-ui/icons/Close';
 
 export default function Submission(): JSX.Element {
   const classes = useStyles();
-  const [inputFiles, setInputFiles] = useState<File[]>([]);
+  // For loading file to state and allowing preview
+  const [inputFiles, setInputFiles] = useState<File>();
+  // For generating the preview img string
+  const [preview, setPreview] = useState<string>();
+  // For snackbar notifications opening/closing
+  const [open, setOpen] = useState(false);
+  //for the snackbar message
+  const [message, setMessage] = useState<string>();
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  //   for generating image preview
+  useEffect(() => {
+    if (inputFiles) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(inputFiles);
+    } else {
+      setPreview('');
+    }
+  }, [inputFiles]);
 
   // For getting our image list into state
   const handleImageChange = ({ currentTarget: { files } }: React.ChangeEvent<HTMLInputElement>) => {
     if (files && files.length) {
-      setInputFiles((existing) => existing.concat(Array.from(files)));
+      setInputFiles(files[0]);
     }
   };
-  // our post request
+  // For deleting the previewed image if the user decides to upload something different
+  const handleImageDelete = () => {
+    setPreview('');
+    setInputFiles(undefined);
+  };
+
   const handleUpload = () => {
     const data = new FormData();
-    const files = inputFiles;
-    if (files) {
-      // iterate through the list of files and get the file and its name
-      for (let i = 0; i < files.length; i++) {
-        data.append('multiImage', files[i], files[i].name);
-      }
+    // if file selected
+    if (inputFiles) {
+      data.append(
+        //this is gonna be the name of the response object. needs to match what's in the function(routes/api/profile.js line 38)
+        'multiImage',
+        inputFiles,
+        inputFiles.name,
+      );
       // our post route. Might need to change depending on the final location in the app
       //also i have questions about the boundary property. In plain react you can set it to data._boundary but here that's not allwoed
       axios
@@ -40,18 +73,21 @@ export default function Submission(): JSX.Element {
             // If File is too big
             if (response.data.error) {
               if ('LIMIT_FILE_SIZE' === response.data.error.code) {
-                // this.ocShowAlert('Max Size: 2mb', 'red')
+                setOpen(true);
+                setMessage('File is larger than 2 MB');
                 console.log('size too big');
               } else if ('LIMIT_UNEXPECTED_FILE' === response.data.error.code) {
-                // this.ocShowAlert('Max 10 images allowed', 'red')
                 console.log('too many pix');
               } else {
-                // if not given file type
-                // this.ocShowAlert(response.data.error,'red')
+                setOpen(true);
+                setMessage('No file selected');
+
                 console.log('no file bro');
               }
             } else {
               //SUCCESS
+              setOpen(true);
+              setMessage('File Submitted!!');
               const fileName = response.data;
               console.log('fileName', fileName);
             }
@@ -59,11 +95,11 @@ export default function Submission(): JSX.Element {
         })
         .catch((error) => {
           //if some other error
-          // this.ocShowAlert(error, 'red')
           console.log('error', error);
         });
     } else {
-      console.log('please upload a file');
+      setOpen(true);
+      setMessage('Please Upload a file');
     }
   };
 
@@ -78,28 +114,21 @@ export default function Submission(): JSX.Element {
           </Typography>
         </Grid>
         <Grid item>
-          <Typography style={{ textAlign: 'center' }}>
-            <Button variant="contained" component="label" className={classes.button}>
-              <input type="file" hidden multiple onChange={handleImageChange} />
-              <CloudUploadIcon className={classes.uploadIcon} />
-            </Button>
-          </Typography>
-        </Grid>
-        <Grid item>
-          {inputFiles.length > 0 ? (
-            <form className={classes.description}>
-              Selected Images: ({inputFiles.length}):
-              <ul>
-                {inputFiles.map((file, index) => (
-                  <li style={{ listStyle: 'none' }} key={index}>
-                    {file.name}
-                  </li>
-                ))}
-              </ul>
-            </form>
-          ) : (
-            ''
-          )}
+          <Grid container justify="center" alignItems="center">
+            {preview ? (
+              <Button variant="contained" component="label" className={classes.button}>
+                <DeleteOutlineIcon type="submit" className={classes.deleteIcon} onClick={handleImageDelete} />
+                <img className={classes.preview} src={preview} />
+              </Button>
+            ) : (
+              <Typography style={{ textAlign: 'center' }}>
+                <Button variant="contained" component="label" className={classes.button}>
+                  <input type="file" accept="image/*" hidden onChange={handleImageChange} />
+                  <CloudUploadIcon className={classes.uploadIcon} />
+                </Button>
+              </Typography>
+            )}
+          </Grid>
         </Grid>
         <Grid item>
           <Grid item>
@@ -122,6 +151,25 @@ export default function Submission(): JSX.Element {
         >
           Submit
         </Button>
+      </Box>
+      <Box>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message={message}
+          action={
+            <React.Fragment>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
       </Box>
     </Grid>
   );
