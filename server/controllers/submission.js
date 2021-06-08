@@ -36,7 +36,7 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
             const images = contest.images;
             const submissions = contest.submissions;
             
-            let createdContest = await Contest.findByIdAndUpdate(
+            const createdContest = await Contest.findByIdAndUpdate(
                 contest_id,
                 {
                     title,
@@ -88,7 +88,7 @@ exports.getAllSubmissions = asyncHandler(async (req, res, next) => {
         throw new Error("No creator id given");
     }
     else{
-        let contest = await Contest.findById(contest_id);
+        const contest = await Contest.findById(contest_id);
         
         if (!contest) {
             res.status(404);
@@ -117,7 +117,7 @@ exports.getAllSubmissions = asyncHandler(async (req, res, next) => {
       throw new Error("No submission found for given id");
     }
     else{
-        let contest = await Contest.findById(submission.contest_id);
+        const contest = await Contest.findById(submission.contest_id);
         if(creator.toString() === contest.creator.toString() ){
             res.status(200).json({ submission: submission });
         }
