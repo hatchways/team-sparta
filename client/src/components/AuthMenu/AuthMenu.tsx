@@ -48,7 +48,9 @@ const AuthMenu = ({ to }: Props): JSX.Element => {
         getContentAnchorEl={null}
       >
         <MenuItem>
-          <Link className={classes.link} to={to}>Profile</Link>
+          <Link className={classes.link} to={to}>
+            Profile
+          </Link>
         </MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>

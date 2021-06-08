@@ -26,7 +26,7 @@ const ListView = memo(function ListView({ data, message, route }: Props): JSX.El
                     <Avatar className={classes.img} alt="Profile Image" src={item.images[0]} variant="square" />
                   </ListItemAvatar>
                   <Grid
-                    className={classes.ListItems}
+                    className={classes.listItems}
                     container
                     direction="column"
                     justify="flex-start"
@@ -34,11 +34,9 @@ const ListView = memo(function ListView({ data, message, route }: Props): JSX.El
                   >
                     <ListItemText
                       primary={
-                        <React.Fragment>
-                          <Typography color={'textPrimary'} className={classes.Name} variant="h4" component="h2">
-                            {item.title}
-                          </Typography>
-                        </React.Fragment>
+                        <Typography color={'textPrimary'} className={classes.name} variant="h4" component="h2">
+                          {item.title}
+                        </Typography>
                       }
                       secondary={
                         <React.Fragment>
