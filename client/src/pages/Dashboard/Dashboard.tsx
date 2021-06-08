@@ -45,7 +45,7 @@ export default function Dashboard(): JSX.Element {
           <ProtectedRoute exact path="/profile" loggedInUser={loggedInUser} component={Profile} />
           <ProtectedRoute exact path="/editProfile" loggedInUser={loggedInUser} component={EditProfile} />
           <ProtectedRoute exact path="/contest" loggedInUser={loggedInUser} component={Contest} />
-          <ProtectedRoute exact path="/contestForm" loggedInUser={loggedInUser} component={ContestForm} />
+          <ProtectedRoute exact path="/contestForm" loggedInUser={loggedInUser} component={Submission} />
           <ProtectedRoute exact path="/submission" loggedInUser={loggedInUser} component={Submission} />
         </Switch>
       </Grid>
