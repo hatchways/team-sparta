@@ -68,7 +68,7 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
     } else {
         res.status(500);
         throw new Error(
-            "Contest not found to allow submission"
+            "Contest does not exist"
         )
     }
 });
