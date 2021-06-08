@@ -8,7 +8,6 @@ const {
   createSubmission,
   getSubmissionById,
   getAllSubmissions,
-  // updateSubmission,
 } = require("../controllers/submission");
 const { validateSubmission } = require("../validate");
 
@@ -29,6 +28,5 @@ router.route("/").post(function (req, res, next) {
 //providing data back to the controller in the format of contest_id/ creator ID/
 router.route("/submissions/:id/:creator/").get(getAllSubmissions);
 router.route("/:id/:creator").get(getSubmissionById);
-// router.route("/:id").patch(validateSubmission, updateSubmission);
 
 module.exports = router;
