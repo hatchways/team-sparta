@@ -13,14 +13,10 @@ const {
 const { validateSubmission } = require("../validate");
 
 router.use(protect);
-/**
- * router that calls the AWS Middleware handler that uses multer to handle multiform data to allow req.body to be viewed with file being uploaded
- * Tests the file to check if it is empty, or correct file type. Then passes to createSubmissions handler
- */
+//Calling AWS handler then forwarding updated parameters to createSubmission handler
 router.route("/").post(function (req, res, next) {
    uploadMultiImage(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      // A Multer error occurred when uploading.
       res.send(err)
     } else if (err) {
       res.send(err)
@@ -28,7 +24,6 @@ router.route("/").post(function (req, res, next) {
       res.send('Please select an image to upload');
     }
     createSubmission(req,res, next);
-    // Everything went fine.
   });
 });
 //providing data back to the controller in the format of contest_id/ creator ID/
