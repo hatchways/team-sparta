@@ -11,8 +11,9 @@ const logger = require("morgan");
 
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
-const uploadRouter = require('./routes/uploadimg')
-
+const uploadRouter = require('./routes/uploadimg');
+const messageRouter = require('./routes/message');
+const conversationRouter = require('./routes/conversation');
 
 const contestRouter = require("./routes/contest");
 const { json, urlencoded } = express;
@@ -48,6 +49,8 @@ app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use('/upload', uploadRouter)
 app.use("/contest", contestRouter);
+app.use("/message", messageRouter);
+app.use("/conversation", conversationRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));

@@ -31,6 +31,17 @@ exports.validateLogin = [
   },
 ];
 
+exports.validateMessage = [
+  check("body", "Please enter a message").notEmpty(),
+  (req, res, next) =>{
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
+    next();
+  },
+];
+
 exports.validateContest = [
   check("title", "Please enter a title for contest").trim().notEmpty(),
   check("description", "Please enter a description for contest")
