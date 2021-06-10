@@ -81,12 +81,11 @@ export default function Profile({ user }: Props): JSX.Element {
   };
 
   useEffect(() => {
-    let active = true;
 
     async function fetchContestsForUser() {
       const response = await getContestsByUser();
 
-      if (active && response) {
+      if (response) {
         const contests = response.contests;
         setUserContests(contests);
       }
@@ -94,9 +93,6 @@ export default function Profile({ user }: Props): JSX.Element {
 
     fetchContestsForUser();
 
-    return () => {
-      active = false;
-    };
   }, []);
 
   return (
