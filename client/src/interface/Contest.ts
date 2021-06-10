@@ -14,7 +14,6 @@ export interface IContestErrors {
   deadline: boolean;
 
 export interface Contest {
-  contestId: string;
   title: string;
   description: string;
   price: number;
