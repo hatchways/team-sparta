@@ -12,6 +12,8 @@ export interface IContestErrors {
   description: boolean;
   prize: boolean;
   deadline: boolean;
+  
+}
 
 export interface Contest {
   _id: string;
