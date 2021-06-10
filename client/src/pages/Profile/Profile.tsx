@@ -15,10 +15,9 @@ import { useEffect, useState } from 'react';
 import { User } from '../../interface/User';
 import { Link } from 'react-router-dom';
 import useStyles from './useStyles';
-import { contests } from '../../interface/tempContestData';
 import ListView from '../../components/ListView/ListView';
-import { contest } from '../../interface/tempContestData';
-
+import { getContestsByUser } from '../../helpers/APICalls/contest';
+import { Contest } from '../../interface/Contest';
 interface Props {
   loggedIn: boolean;
   user: User;
@@ -27,8 +26,8 @@ interface Props {
 export default function Profile({ user }: Props): JSX.Element {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const Contests = contests;
-  const [newContest, setNewContest] = useState<contest[]>(Object);
+  const [userContests, setUserContests] = useState<[Contest]>();
+
 
   const MyTheme = createMuiTheme({
     palette: {
@@ -68,25 +67,32 @@ export default function Profile({ user }: Props): JSX.Element {
     );
   }
 
-  //Reduces the collection of contest to contests that involves the user
-  const handleContest = () => {
-    setNewContest(Contest);
-  };
 
   const handleChange = (event: React.ChangeEvent<Record<string, unknown>>, newValue: number) => {
     setValue(newValue);
   };
 
   const handleInProg = () => {
-    return newContest.length > 0 ? newContest.filter((e) => new Date(e.end_date) > new Date()) : [];
+    return userContests ? userContests.filter((e) => new Date(e.end_date) > new Date()) : [];
   };
 
   const handleComp = () => {
-    return newContest.length > 0 ? newContest.filter((e) => new Date(e.end_date) < new Date()) : [];
+    return userContests ? userContests.filter((e) => new Date(e.end_date) < new Date()) : [];
   };
 
   useEffect(() => {
-    handleContest();
+
+    async function fetchContestsForUser() {
+      const response = await getContestsByUser();
+
+      if (response) {
+        const contests = response.contests;
+        setUserContests(contests);
+      }
+    }
+
+    fetchContestsForUser();
+
   }, []);
 
   return (
