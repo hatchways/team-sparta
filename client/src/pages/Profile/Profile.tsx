@@ -27,6 +27,7 @@ export default function Profile(): JSX.Element {
   const [userContests, setUserContests] = useState<[Contest]>();
   const { loggedInUser } = useAuth();
 
+
   const MyTheme = createMuiTheme({
     palette: {
       primary: {
@@ -64,6 +65,7 @@ export default function Profile(): JSX.Element {
       </div>
     );
   }
+
   const handleChange = (event: React.ChangeEvent<Record<string, unknown>>, newValue: number) => {
     setValue(newValue);
   };
@@ -77,6 +79,7 @@ export default function Profile(): JSX.Element {
   };
 
   useEffect(() => {
+
     async function fetchContestsForUser() {
       const response = await getContestsByUser();
 
@@ -87,6 +90,7 @@ export default function Profile(): JSX.Element {
     }
 
     fetchContestsForUser();
+
   }, []);
 
   if (loggedInUser) {
