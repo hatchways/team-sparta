@@ -15,6 +15,8 @@ const uploadRouter = require('./routes/uploadimg')
 
 
 const contestRouter = require("./routes/contest");
+const submissionRouter  = require("./routes/submission");
+
 const { json, urlencoded } = express;
 
 connectDB();
@@ -48,6 +50,7 @@ app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use('/upload', uploadRouter)
 app.use("/contest", contestRouter);
+app.use("/submission", submissionRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));

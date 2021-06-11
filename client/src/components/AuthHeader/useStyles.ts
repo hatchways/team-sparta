@@ -57,6 +57,7 @@ const useStyles = makeStyles(() => ({
     alignSelf: 'left',
     alignItems: 'left',
     marginLeft: 0,
+    width: 'auto',
   },
 }));
 
