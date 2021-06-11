@@ -1,6 +1,7 @@
 //This is a temporary model of contest for purposes of setting up the integration of the contest into Profile Page
 import testTat1 from '../Images/testTat1.png';
 import testTat2 from '../Images/testTat2.png';
+import happyDude from '../Images/happyguy.png';
 
 export interface contest {
   id: number;
@@ -16,13 +17,13 @@ export interface contest {
 export const contests: contest[] = [
   {
     id: 1,
-    title: 'contest 1',
-    description: 'random description',
+    title: 'A tattoo of a dragon',
+    description: 'A Really Cool Badass Tat',
     price: 150,
     end_date: new Date('2021-09-06T00:00:00.000+00:00'),
     start_date: new Date('2021-06-01T22:43:16.657+00:00'),
-    creator: 'test',
-    images: testTat1,
+    creator: 'Hector the Mighty',
+    images: happyDude,
   },
   {
     id: 2,
