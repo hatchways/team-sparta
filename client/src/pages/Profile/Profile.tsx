@@ -15,20 +15,17 @@ import { useEffect, useState } from 'react';
 import { User } from '../../interface/User';
 import { Link } from 'react-router-dom';
 import useStyles from './useStyles';
-import { contests } from '../../interface/tempContestData';
 import ListView from '../../components/ListView/ListView';
-import { contest } from '../../interface/tempContestData';
+import { getContestsByUser } from '../../helpers/APICalls/contest';
+import { Contest } from '../../interface/Contest';
+import { useAuth } from '../../context/useAuthContext';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-interface Props {
-  loggedIn: boolean;
-  user: User;
-}
-
-export default function Profile({ user }: Props): JSX.Element {
+export default function Profile(): JSX.Element {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const Contests = contests;
-  const [newContest, setNewContest] = useState<contest[]>(Object);
+  const [userContests, setUserContests] = useState<[Contest]>();
+  const { loggedInUser } = useAuth();
 
   const MyTheme = createMuiTheme({
     palette: {
@@ -67,66 +64,78 @@ export default function Profile({ user }: Props): JSX.Element {
       </div>
     );
   }
-
-  //Reduces the collection of contest to contests that involves the user
-  const handleContest = () => {
-    setNewContest(Contests);
-  };
-
   const handleChange = (event: React.ChangeEvent<Record<string, unknown>>, newValue: number) => {
     setValue(newValue);
   };
 
   const handleInProg = () => {
-    return newContest.length > 0 ? newContest.filter((e) => new Date(e.end_date) > new Date()) : [];
+    return userContests ? userContests.filter((e) => new Date(e.end_date) > new Date()) : [];
   };
 
   const handleComp = () => {
-    return newContest.length > 0 ? newContest.filter((e) => new Date(e.end_date) < new Date()) : [];
+    return userContests ? userContests.filter((e) => new Date(e.end_date) < new Date()) : [];
   };
 
   useEffect(() => {
-    handleContest();
+    async function fetchContestsForUser() {
+      const response = await getContestsByUser();
+
+      if (response) {
+        const contests = response.contests;
+        setUserContests(contests);
+      }
+    }
+
+    fetchContestsForUser();
   }, []);
 
-  return (
-    <Grid className={classes.profileContent} container direction="column" alignItems="center">
-      <Avatar className={classes.userImage} alt="Profile Image" src={`https://robohash.org/${user.email}.png`} />
-      <Typography className={classes.userName}>{user.username}</Typography>
-      <Link to={'/dashboard/EditProfile'} className={classes.link}>
-        <Button className={classes.button} color="inherit" variant="contained" disableElevation>
-          Edit Profile
-        </Button>
-      </Link>
-      <Box className={classes.tabContainer}>
-        <AppBar className={classes.tabBar} position="static" elevation={0}>
-          <ThemeProvider theme={MyTheme}>
-            <Tabs
-              className={classes.tabs}
-              value={value}
-              onChange={handleChange}
-              textColor="primary"
-              variant="fullWidth"
-              aria-label="User Content tabs"
-            >
-              <Tab className={classes.tab} label="IN PROGRESS" />
-              <Tab className={classes.tab} label="COMPLETED" />
-              <Tab className={classes.tab} label="SUBMISSIONS" />
-            </Tabs>
-          </ThemeProvider>
-        </AppBar>
-        <Paper elevation={2} square>
-          <TabPanel value={value} index={0}>
-            <ListView data={handleInProg()} message={'No Contest In Progress'} route={'/dashboard/contest'} />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <ListView data={handleComp()} message={'No Contest Completed'} route={'/dashboard/contest'} />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            Submission stuff
-          </TabPanel>
-        </Paper>
-      </Box>
-    </Grid>
-  );
+  if (loggedInUser) {
+    return (
+      <Grid className={classes.profileContent} container direction="column" alignItems="center">
+        <Avatar
+          className={classes.userImage}
+          alt="Profile Image"
+          src={`https://robohash.org/${loggedInUser.email}.png`}
+        />
+        <Typography className={classes.userName}>{loggedInUser.username}</Typography>
+        <Link to={'/editProfile'} className={classes.link}>
+          <Button className={classes.button} color="inherit" variant="contained" disableElevation>
+            Edit Profile
+          </Button>
+        </Link>
+
+        <Box className={classes.tabContainer}>
+          <AppBar className={classes.tabBar} position="static" elevation={0}>
+            <ThemeProvider theme={MyTheme}>
+              <Tabs
+                className={classes.tabs}
+                value={value}
+                onChange={handleChange}
+                textColor="primary"
+                variant="fullWidth"
+                aria-label="User Content tabs"
+              >
+                <Tab className={classes.tab} label="IN PROGRESS" />
+                <Tab className={classes.tab} label="COMPLETED" />
+                <Tab className={classes.tab} label="SUBMISSIONS" />
+              </Tabs>
+            </ThemeProvider>
+          </AppBar>
+          <Paper elevation={2} square>
+            <TabPanel value={value} index={0}>
+              <ListView data={handleInProg()} message={'No Contest In Progress'} route={'/dashboard/contest'} />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <ListView data={handleComp()} message={'No Contest Completed'} route={'/dashboard/contest'} />
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              Submission stuff
+            </TabPanel>
+          </Paper>
+        </Box>
+      </Grid>
+    );
+  } else {
+    return <CircularProgress />;
+  }
 }

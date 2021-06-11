@@ -6,7 +6,11 @@ import useStyles from './useStyles';
 import { Button, Input, InputAdornment, TextField, GridList, GridListTile } from '@material-ui/core';
 import moment from 'moment';
 import React, { useState } from 'react';
+import Modal from '@material-ui/core/Modal';
 import { IContestFields, IContestErrors } from '../../../interface/Contest';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import { CheckOutModal } from '../../../components/CheckOutModal/CheckOutModal';
 
 //This array is for demo purposes only will be changed later to grab images from AWS server
 const list: string[] = [
@@ -21,9 +25,15 @@ const list: string[] = [
   'https://picsum.photos/id/100/200/300',
 ];
 
+const stripeTest = loadStripe(process.env.REACT_APP_KEY || '');
+
 const ContestForm: React.FC = () => {
   //Same thing with the handlesubmit this will be changed somewhat when
   // it comes time for integration frontend to backend
+  const handleClick = () => {
+    setopen(false);
+  };
+
   const handleSubmit = (e: React.SyntheticEvent): void => {
     e.preventDefault();
     setErrors({
@@ -55,7 +65,8 @@ const ContestForm: React.FC = () => {
       tempArray.deadline = true;
     }
     setErrors(tempArray);
-    console.log('Contest Fields', contestFields);
+    console.log('Contest Fields', tempArray);
+    setopen(true);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,106 +113,117 @@ const ContestForm: React.FC = () => {
     deadline: false,
   });
 
+  const [open, setopen] = useState(false);
+
   return (
-    <Grid container className={classes.root}>
-      <Grid item xs={12} sm={12} md={12} elevation={6} component={Paper}>
-        <Typography className={classes.contestTitle} component="h1" variant="h1">
-          Create New Contest
-        </Typography>
-        <Grid container style={{ height: '100vh' }} direction="column" justify="center" alignItems="center">
-          <Box width="100%" boxShadow={3} className={classes.contestFormBox} maxWidth={'60%'}>
-            <Grid
-              container
-              direction="column"
-              className={classes.contestFormContainer}
-              spacing={5}
-              xs={10}
-              sm={10}
-              md={10}
-            >
-              <Grid item xs={12} sm={12} md={12}>
-                <Typography className={classes.contestFormLabel}>What do you need designed?</Typography>
-                <TextField
-                  name="title"
-                  className={classes.contestTextInput}
-                  placeholder="Write a descriptive title"
-                  fullWidth
-                  variant="outlined"
-                  onChange={handleChange}
-                  helperText={errors.title ? 'Title must be longer then 1 ' : ''}
-                  error={errors.title}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12} md={12}>
-                <Typography className={classes.contestFormLabel}>Description</Typography>
-                <TextField
-                  name="description"
-                  className={classes.contestTextInput}
-                  placeholder="Details about what type of tattoo you want"
-                  fullWidth
-                  variant="outlined"
-                  multiline={true}
-                  rows={5}
-                  onChange={handleChange}
-                  helperText={errors.description ? 'Description must be longer then 5 ' : ''}
-                  error={errors.description}
-                />
-              </Grid>
-
-              <Grid item>
-                <Grid container>
-                  <Typography className={classes.contestFormLabel}>Prize Amount</Typography>
-                  <Typography className={classes.contestFormLabel} style={{ marginLeft: '100px' }}>
-                    Deadline
-                  </Typography>
-                </Grid>
-                <Grid container>
-                  <Input
-                    name="prize"
-                    type="number"
-                    className={classes.prizeInput}
-                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                    onChange={handleChange}
-                    error={errors.prize}
-                  />
-
+    <React.Fragment>
+      <Grid container className={classes.root}>
+        <Grid item xs={12} sm={12} md={12} elevation={6} component={Paper}>
+          <Typography className={classes.contestTitle} component="h1" variant="h1">
+            Create New Contest
+          </Typography>
+          <Grid container style={{ height: '100vh' }} direction="column" justify="center" alignItems="center">
+            <Box width="100%" boxShadow={3} className={classes.contestFormBox} maxWidth={'60%'}>
+              <Grid
+                container
+                direction="column"
+                className={classes.contestFormContainer}
+                spacing={5}
+                xs={10}
+                sm={10}
+                md={10}
+              >
+                <Grid item xs={12} sm={12} md={12}>
+                  <Typography className={classes.contestFormLabel}>What do you need designed?</Typography>
                   <TextField
-                    name="deadline"
-                    type="date"
-                    defaultValue={moment().add(1, 'day').format('YYYY-MM-DD')}
-                    className={classes.contestDateInput}
+                    name="title"
+                    className={classes.contestTextInput}
+                    placeholder="Write a descriptive title"
+                    fullWidth
                     variant="outlined"
                     onChange={handleChange}
-                    helperText={errors.deadline ? 'Date must come after current date ' : ''}
-                    error={errors.deadline}
+                    helperText={errors.title ? 'Title must be longer then 1 ' : ''}
+                    error={errors.title}
                   />
                 </Grid>
-                {errors.prize && (
-                  <Typography className={classes.contestPrizeError}>Prize must be greater then 0</Typography>
-                )}
-
-                <Grid container justify="center" className={classes.contestImages}>
-                  <GridList cellHeight={100} cols={3} className={classes.imageGridList}>
-                    {renderImageList()}
-                  </GridList>
+                <Grid item xs={12} sm={12} md={12}>
+                  <Typography className={classes.contestFormLabel}>Description</Typography>
+                  <TextField
+                    name="description"
+                    className={classes.contestTextInput}
+                    placeholder="Details about what type of tattoo you want"
+                    fullWidth
+                    variant="outlined"
+                    multiline={true}
+                    rows={5}
+                    onChange={handleChange}
+                    helperText={errors.description ? 'Description must be longer then 5 ' : ''}
+                    error={errors.description}
+                  />
                 </Grid>
-                <Box textAlign="center">
-                  <Button
-                    type="submit"
-                    onClick={(e) => handleSubmit(e)}
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                  >
-                    Create Contest
-                  </Button>
-                </Box>
+
+                <Grid item>
+                  <Grid container>
+                    <Typography className={classes.contestFormLabel}>Prize Amount</Typography>
+                    <Typography className={classes.contestFormLabel} style={{ marginLeft: '100px' }}>
+                      Deadline
+                    </Typography>
+                  </Grid>
+                  <Grid container>
+                    <Input
+                      name="prize"
+                      type="number"
+                      className={classes.prizeInput}
+                      startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                      onChange={handleChange}
+                      error={errors.prize}
+                    />
+
+                    <TextField
+                      name="deadline"
+                      type="date"
+                      defaultValue={moment().add(1, 'day').format('YYYY-MM-DD')}
+                      className={classes.contestDateInput}
+                      variant="outlined"
+                      onChange={handleChange}
+                      helperText={errors.deadline ? 'Date must come after current date ' : ''}
+                      error={errors.deadline}
+                    />
+                  </Grid>
+                  {errors.prize && (
+                    <Typography className={classes.contestPrizeError}>Prize must be greater then 0</Typography>
+                  )}
+
+                  <Grid container justify="center" className={classes.contestImages}>
+                    <GridList cellHeight={100} cols={3} className={classes.imageGridList}>
+                      {renderImageList()}
+                    </GridList>
+                  </Grid>
+                  <Box textAlign="center">
+                    <Button
+                      type="submit"
+                      onClick={(e) => handleSubmit(e)}
+                      variant="contained"
+                      color="primary"
+                      className={classes.submit}
+                    >
+                      Create Contest
+                    </Button>
+                  </Box>
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
+            </Box>
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
+      <Modal open={open} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
+        <React.Fragment>
+          <Elements stripe={stripeTest}>
+            <CheckOutModal price={contestFields.prize} closeModel={handleClick} />
+          </Elements>
+        </React.Fragment>
+      </Modal>
+    </React.Fragment>
   );
 };
 
