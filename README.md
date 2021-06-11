@@ -40,3 +40,10 @@ This is a little description about your project.
 2. Dashboard. Here is a description about what a user can expect to see
 
 ![Dashboard](demo/images/dashboard.png)
+
+### Stripe Integration
+
+1. Go into client directory `cd client` and run `npm install`
+2. Go into server directory `cd server` and run `npm install`
+3. In the server directory create a `.env` file and add `StripeKeyBackend=API_KEY`
+4. 4. In the client directory create a `.env file and add `REACT_APP_KEY=API_KEY` (diff key from above)
