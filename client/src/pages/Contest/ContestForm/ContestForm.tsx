@@ -31,7 +31,9 @@ const ContestForm: React.FC = () => {
   //Same thing with the handlesubmit this will be changed somewhat when
   // it comes time for integration frontend to backend
   const handleClick = () => {
-    setopen(false);
+    setTimeout(() => {
+      setopen(false);
+    }, 4000);
   };
 
   const handleSubmit = (e: React.SyntheticEvent): void => {
