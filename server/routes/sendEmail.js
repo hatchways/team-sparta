@@ -15,8 +15,10 @@ const msg = {
 router.post("/sendemail", (req, res) => {
   sgMail.send(msg, function (err, info) {
     if (err) {
+      res.status(404).json('Email not sent :(')
       console.log("email not sent");
     } else {
+      res.status(201).json('Email sent successfully!')
       console.log("email SENT!");
     }
   });
