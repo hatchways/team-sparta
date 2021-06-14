@@ -7,13 +7,14 @@ const {
   createNewNotification,
   markNotificationAsRead,
 } = require("../controllers/notifications");
-// works
-router.route("/").get(getAllNotifications);
-//works
-router.route("/unread").get(getAllUnreadNotifications);
-//works
-router.route("/new").post(createNewNotification);
-//works
-router.route("/markread").patch(markNotificationAsRead);
+const protect = require("../middleware/auth");
+
+router.route("/:id").get(protect,getAllNotifications);
+
+router.route("/unread/:id").get(protect,getAllUnreadNotifications);
+
+router.route("/new").post(protect,createNewNotification);
+
+router.route("/markread").patch(protect,markNotificationAsRead);
 
 module.exports = router;
