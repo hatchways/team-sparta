@@ -92,7 +92,7 @@ exports.updateMessage = asyncHandler(async (req, res, next) => {
     throw new Error("You are not allowed to edit this message.");
   }
 
-  const createdMessage = await Message.findByIdAndUpdate(
+  const updatedMessage = await Message.findByIdAndUpdate(
     messageId,
     {
       body,
