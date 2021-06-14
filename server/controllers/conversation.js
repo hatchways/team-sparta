@@ -10,7 +10,7 @@ exports.getConversationById = asyncHandler(async (req, res, next) => {
 
   if (!conversation) {
     res.status(404);
-    throw new Error("No contest found for given id");
+    throw new Error("No conversation found for given id");
   }
 
   if (!userId) {
