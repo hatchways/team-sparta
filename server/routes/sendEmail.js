@@ -4,7 +4,7 @@ const sgMail = require("@sendgrid/mail");
 require("dotenv").config();
 sgMail.setApiKey(process.env.sendGridKey);
 
-//dummy message for now. we can think about templates etc once we have models, controller set up 
+//dummy message for now. we can think about templates etc once we have models, controller set up
 const msg = {
   to: "vicscherman@gmail.com",
   from: "hatchwayssparta@gmail.com",
@@ -15,13 +15,13 @@ const msg = {
 router.post("/sendemail", (req, res) => {
   sgMail.send(msg, function (err, info) {
     if (err) {
-      res.status(404).json('Email not sent :(')
+      res.status(404).json("Email not sent :(");
       console.log("email not sent");
     } else {
-      res.status(201).json('Email sent successfully!')
+      res.status(201).json("Email sent successfully!");
       console.log("email SENT!");
     }
   });
 });
 
-module.exports = router
+module.exports = router;

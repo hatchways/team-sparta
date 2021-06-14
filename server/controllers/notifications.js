@@ -64,7 +64,7 @@ exports.markNotificationAsRead = asyncHandler(async (req, res, next) => {
     res.status(500);
     throw new Error("could not find unread notification");
   }
-//  happy message
+  //  happy message
   if (unreadNotification) {
     res.status(201).json({
       success: {
