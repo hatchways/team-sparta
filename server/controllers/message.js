@@ -30,7 +30,7 @@ exports.createMessage = asyncHandler(async (req, res, next) => {
       });
   
       if (createdMessage) {
-        let messageArr = conversation.messages;
+        const messageArr = conversation.messages;
         messageArr.push(createdMessage._id);
   
         const messages = messageArr;
