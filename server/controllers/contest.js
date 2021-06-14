@@ -1,8 +1,5 @@
 const Contest = require("../models/Contest");
 const asyncHandler = require("express-async-handler");
-const User = require("../models/User");
-const Customer = require("../models/Customer");
-
 const stripe = require("stripe")(process.env.StripeKeyBackend);
 
 exports.getContestById = asyncHandler(async (req, res, next) => {
@@ -108,73 +105,70 @@ exports.updateContest = asyncHandler(async (req, res, next) => {
   }
 });
 
-exports.addCustomer = asyncHandler(async (req, res, next) => {
-  const { source, price, save } = req.body;
-
-  const customer = await Customer.findOne({
-    user_id: req.user.id,
-  });
-
-  const user = await User.findById(req.user.id);
-
-  if (customer) {
-    if (price > 0) {
-      const paymentCreate = await stripe.charges.create({
-        amount: 500,
-        currency: "usd",
-        // because we are in a test env source:"tok_visa" must be sent instead of customer_id
-        source: "tok_visa",
-      });
-
-      res.status(201).json({
-        success: {
-          payment: paymentCreate,
-          message: "Payment was successful",
-        },
-      });
-    } else {
-      res.status(400);
-      throw new Error("Credit Card already exists.");
-    }
-  }
-
-  const newCustomer = await stripe.customers.create({
-    email: user.email,
-    name: user.username,
-  });
-
-  if (save) {
-    const createCustomer = await Customer.create({
-      customer_id: newCustomer.id,
-      payment_id: source.id,
-      user_id: req.user.id,
-    });
-
-    res.status(201).json({
-      success: {
-        customer: createCustomer,
-        message: "Credit Card information saved",
-      },
-    });
-  } else {
-    const paymentCreate = await stripe.charges.create({
-      amount: 500,
+/**
+ * Summary.
+ * Authenticated User can update exisintg contests
+ * Description.
+ * We first check to see if we have a customer or token
+ * if we have a customer that means they have their card information saved
+ * and we can create a paymentIntent which must also be confirmed otherwise
+ * we get a token which we use to make a charge to the users card
+ * @param Customer? customer object (optional)
+ * @param token string used to handle stripe charges to card
+ * @param Number price
+ * @returns response object
+ *
+ */
+exports.createContestCharge = asyncHandler(async (req, res, next) => {
+  let charge;
+  const centsMultiplier = 100;
+  if (req.body.customer) {
+    const { customer, price } = req.body;
+    const priceInCents = price * centsMultiplier;
+    charge = await stripe.paymentIntents.create({
+      amount: priceInCents,
       currency: "usd",
-      // because we are in a test env source:"tok_visa" must be sent instead of customer_id
-      source: "tok_visa",
+      description: "Contest create charge",
+      customer: customer.customer_id,
+      off_session: false,
+      setup_future_usage: "off_session",
     });
-    if (paymentCreate) {
+
+    if (charge) {
+      const paymentIntent = await stripe.paymentIntents.confirm(charge.id, {
+        payment_method: "pm_card_visa",
+      });
+      // }
+      if (paymentIntent) {
+        res.status(201).json({
+          success: {
+            message: "Payment was successful",
+          },
+        });
+      } else {
+        res.status(500);
+        throw new Error("Payment was unsuccessful, Please try again");
+      }
+    }
+  } else {
+    const { token, price } = req.body;
+    const priceInCents = price * centsMultiplier;
+
+    charge = await stripe.charges.create({
+      amount: priceInCents,
+      currency: "usd",
+      description: "Contest create charge",
+      source: token,
+    });
+    if (charge) {
       res.status(201).json({
         success: {
-          payment: paymentCreate,
           message: "Payment was successful",
         },
       });
     } else {
       res.status(500);
-      throw new Error(
-        "Could not customer contest at this time, Please try again"
-      );
+      throw new Error("Payment was unsuccessful, Please try again");
     }
   }
 });

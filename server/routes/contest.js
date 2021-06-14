@@ -6,7 +6,7 @@ const {
   getContestById,
   getAllContests,
   updateContest,
-  addCustomer,
+  createContestCharge,
 } = require("../controllers/contest");
 const { validateContest } = require("../validate");
 
@@ -16,6 +16,5 @@ router.route("/").post(validateContest, createContest);
 router.route("/contests").get(getAllContests);
 router.route("/:id").get(getContestById);
 router.route("/:id").patch(validateContest, updateContest);
-router.route("/customer").post(addCustomer);
-
+router.route("/charge").post(createContestCharge);
 module.exports = router;

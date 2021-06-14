@@ -31,9 +31,7 @@ const ContestForm: React.FC = () => {
   //Same thing with the handlesubmit this will be changed somewhat when
   // it comes time for integration frontend to backend
   const handleClick = () => {
-    setTimeout(() => {
-      setopen(false);
-    }, 4000);
+    setopen(false);
   };
 
   const handleSubmit = (e: React.SyntheticEvent): void => {
@@ -218,10 +216,15 @@ const ContestForm: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Modal open={open} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
+      <Modal open={open} onBackdropClick={handleClick}>
         <React.Fragment>
           <Elements stripe={stripeTest}>
-            <CheckOutModal price={contestFields.prize} closeModel={handleClick} />
+            <CheckOutModal
+              price={contestFields.prize}
+              title={contestFields.title}
+              description={contestFields.description}
+              closeModel={handleClick}
+            />
           </Elements>
         </React.Fragment>
       </Modal>
