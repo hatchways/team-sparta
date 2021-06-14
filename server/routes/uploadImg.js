@@ -7,7 +7,6 @@ const uploadMultiImage = require("../utils/uploadFiles");
 
 router.post("/images-upload", (req, res) => {
   uploadMultiImage(req, res, (error) => {
-    console.log("uploaded files", req.files);
     if (error) {
       console.log("errors", error);
       // we can use this to display error notifications
