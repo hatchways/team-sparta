@@ -4,7 +4,7 @@ const Conversation = require("../models/Conversation");
 
 exports.getAllMessages = asyncHandler(async (req, res, next) => {
   const messages = await Message.find({
-    conversation_id: req.params.conversationId,
+    conversationId: req.params.conversationId,
   });
 
   if (!messages) {
@@ -87,7 +87,7 @@ exports.updateMessage = asyncHandler(async (req, res, next) => {
     throw new Error("No message found for given id");
   }
 
-  if (message.creator.toString() !== req.user.id) {
+  if (message.creatorId.toString() !== req.user.id) {
     res.status(401);
     throw new Error("You are not allowed to edit this message.");
   }
@@ -100,10 +100,10 @@ exports.updateMessage = asyncHandler(async (req, res, next) => {
     { new: true }
   );
 
-  if (createdMessage) {
+  if (updatedMessage) {
     res.status(201).json({
       success: {
-        message: createdMessage,
+        message: updatedMessage,
       },
     });
   } else {
