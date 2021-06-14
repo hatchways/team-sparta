@@ -65,24 +65,6 @@ exports.addCustomer = asyncHandler(async (req, res, next) => {
   if (customer) {
     res.status(400);
     throw new Error("Credit Card already exists.");
-    // if (price > 0) {
-    //   const paymentCreate = await stripe.charges.create({
-    //     amount: 500,
-    //     currency: "usd",
-    //     // because we are in a test env source:"tok_visa" must be sent instead of customer_id
-    //     source: "tok_visa",
-    //   });
-
-    //   res.status(201).json({
-    //     success: {
-    //       payment: paymentCreate,
-    //       message: "Payment was successful",
-    //     },
-    //   });
-    // } else {
-    //   res.status(400);
-    //   throw new Error("Credit Card already exists.");
-    // }
   }
 
   const newCustomer = await stripe.customers.create({
@@ -109,41 +91,6 @@ exports.addCustomer = asyncHandler(async (req, res, next) => {
       "Could not customer contest at this time, Please try again"
     );
   }
-
-  // if (save) {
-  //   const createCustomer = await Customer.create({
-  //     customer_id: newCustomer.id,
-  //     payment_id: source.id,
-  //     user_id: req.user.id,
-  //   });
-
-  //   res.status(201).json({
-  //     success: {
-  //       customer: createCustomer,
-  //       message: "Credit Card information saved",
-  //     },
-  //   });
-  // } else {
-  //   const paymentCreate = await stripe.charges.create({
-  //     amount: 500,
-  //     currency: "usd",
-  //     // because we are in a test env source:"tok_visa" must be sent instead of customer_id
-  //     source: "tok_visa",
-  //   });
-  //   if (paymentCreate) {
-  //     res.status(201).json({
-  //       success: {
-  //         payment: paymentCreate,
-  //         message: "Payment was successful",
-  //       },
-  //     });
-  //   } else {
-  //     res.status(500);
-  //     throw new Error(
-  //       "Could not customer contest at this time, Please try again"
-  //     );
-  //   }
-  // }
 });
 
 exports.removeCustomer = asyncHandler(async (req, res, next) => {
