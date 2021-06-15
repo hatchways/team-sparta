@@ -1,54 +1,37 @@
 import react, { useState, useEffect } from 'react';
-import { Grid, Typography, Box, Chip, Avatar } from '@material-ui/core';
+import { Grid, Typography, Box, Chip, Avatar, Button } from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import useStyles from './useStyles';
-
-import { contest, contests } from '../../interface/tempContestData';
-// mock data for now
-const submissions = [
-  { img: 'https://source.unsplash.com/random', author: 'freddy', title: 'hello' },
-  { img: 'https://source.unsplash.com/1600x900/?nature,water', author: 'Roberta', title: 'Lion Tattoo' },
-  { img: 'https://source.unsplash.com/1600x900/?lions,tigers', author: 'Carlos', title: 'My Submission' },
-  { img: 'https://source.unsplash.com/1600x900/?tattoo,plants', author: 'Wendy', title: 'Pick Me!' },
-  { img: 'https://source.unsplash.com/1600x900/?plane,eyes', author: 'Frank', title: 'Fly away' },
-  { img: 'https://source.unsplash.com/1600x900/?comet,hello', author: 'jojoe', title: 'indiana jones' },
-  { img: 'https://source.unsplash.com/1600x900/?space,fire', author: 'miranda', title: 'contest time' },
-  { img: 'https://source.unsplash.com/1600x900/?grim,reaper', author: 'Sarah', title: 'you are my friend' },
-  { img: 'https://source.unsplash.com/1600x900/?brazil,country', author: 'Paul', title: 'what is up' },
-  { img: 'https://source.unsplash.com/1600x900/?forest,fight', author: 'Milad', title: 'hello' },
-  { img: 'https://source.unsplash.com/1600x900/?tank,fighter', author: 'Carlos', title: 'hello' },
-];
+// mock data 4 now
+import { Contest, Contests } from '../../interface/tempContestData';
+import { Submissions } from '../../interface/tempSubmissionData';
+// Used to test the two views. 1 is the id of the contest owner and shows the owner view(view all submissions, pick winner). 2 shows the submittor view(contest deets and submit button)
+const contestOwnerId = 11;
 
 export default function ViewContestSubmissions(): JSX.Element {
   const classes = useStyles();
-  const [contestCard, setContestCard] = useState<contest>(Object);
-  const [winnerIndex, setWinnerIndex] = useState(Number);
+  const [contestCard, setContestCard] = useState<Contest>(Object);
+  const [winnerIndex, setWinnerIndex] = useState(-1);
 
   //   pulling dummy data for now
   const handleContest = () => {
-    setContestCard(contests[0]);
+    setContestCard(Contests[0]);
   };
 
   useEffect(() => {
     handleContest();
   }, [contestCard]);
 
-  //   this is the grossest thing i've ever coded but it's just there to test functionality
-  useEffect(() => {
-    setWinnerIndex(999);
-  }, []);
-
   const handleWinnerIndex = (index: number) => {
     setWinnerIndex(index);
-    console.log(winnerIndex);
   };
 
   const renderImageList = (): JSX.Element[] => {
-    return submissions.map((tile, index) => {
+    return Submissions.map((tile, index) => {
       return (
         <GridListTile key={index}>
           <img src={tile.img} alt={tile.title} />
@@ -56,14 +39,14 @@ export default function ViewContestSubmissions(): JSX.Element {
             title={tile.title}
             subtitle={<span>by: {tile.author}</span>}
             actionIcon={
-              index === winnerIndex ? (
+              index >= 0 && index === winnerIndex ? (
                 <IconButton
                   key={index}
                   aria-label={`info about ${tile.title}`}
                   onClick={() => handleWinnerIndex(index)}
                   className={classes.icon}
                 >
-                  <Chip label="Winner"></Chip>
+                  <Chip className={classes.winnerTag} label="Winner"></Chip>
                 </IconButton>
               ) : (
                 <IconButton
@@ -72,7 +55,7 @@ export default function ViewContestSubmissions(): JSX.Element {
                   onClick={() => handleWinnerIndex(index)}
                   className={classes.icon}
                 >
-                  <AddCircleOutlineIcon />
+                  <EmojiEventsIcon />
                 </IconButton>
               )
             }
@@ -91,24 +74,29 @@ export default function ViewContestSubmissions(): JSX.Element {
             <Chip label={`$${contestCard.price}`} className={classes.prizeTag}></Chip>
           </Typography>
         </Grid>
-        <Grid container direction="row" spacing={2}>
+        <Grid container className={classes.submitButton}>
           <Grid className={classes.authorInfo} item>
             <Avatar alt={contestCard.creator} src={contestCard.images} />
-          </Grid>
-          <Grid item>
-            <Typography variant="h6" className={classes.authorInfo} color="textPrimary">
+            <Typography className={classes.creatorName} variant="h6" color="textPrimary">
               By {contestCard.creator}
             </Typography>
           </Grid>
+          {contestCard.id !== contestOwnerId ? (
+            <Grid item>
+              <Button className={classes.accBtn}>Submit</Button>
+            </Grid>
+          ) : null}
         </Grid>
       </Box>
-      <Box boxShadow={1} className={classes.submissionsBox}>
-        <Grid container justify="center" className={classes.contestImages}>
-          <GridList cellHeight={300} cols={4} spacing={30} className={classes.imageGridList}>
-            {renderImageList()}
-          </GridList>
-        </Grid>
-      </Box>
+      {contestCard.id === contestOwnerId ? (
+        <Box boxShadow={1} className={classes.submissionsBox}>
+          <Grid container justify="center" className={classes.contestImages}>
+            <GridList cellHeight={300} cols={4} spacing={30} className={classes.imageGridList}>
+              {renderImageList()}
+            </GridList>
+          </Grid>
+        </Box>
+      ) : null}
     </Grid>
   );
 }

@@ -3,7 +3,7 @@ import testTat1 from '../Images/testTat1.png';
 import testTat2 from '../Images/testTat2.png';
 import happyDude from '../Images/happyguy.png';
 
-export interface contest {
+export interface Contest {
   id: number;
   title: string;
   description: string;
@@ -14,7 +14,7 @@ export interface contest {
   images: string;
 }
 
-export const contests: contest[] = [
+export const Contests: Contest[] = [
   {
     id: 1,
     title: 'A tattoo of a dragon',

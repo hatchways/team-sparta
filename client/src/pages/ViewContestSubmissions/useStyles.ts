@@ -26,8 +26,9 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
   },
   authorInfo: {
-    display: 'flex-start',
+    display: 'flex',
     flexDirection: 'row',
+    alignContent: 'left',
     justifyContent: 'space-between',
   },
 
@@ -37,10 +38,31 @@ const useStyles = makeStyles((theme) => ({
     width: 50,
   },
   creatorName: {
-    textAlign: 'left',
+    paddingLeft: '10px',
     fontStyle: 'bold',
-    fontSize: '45px',
+    fontSize: '15px',
     color: 'black',
+  },
+  accBtn: {
+    width: 170,
+    height: 54,
+    border: '1px solid black',
+    borderRadius: '0%',
+    filter: 'drop-shadow(0px 2px 6px rgba(74,106,149,0.2))',
+    backgroundColor: 'white',
+    color: '#black',
+    boxShadow: 'none',
+    marginRight: 0,
+    display: 'flex',
+    alignItems: 'right',
+    paddingLeft: '20px',
+    '&:hover': { color: 'white', backgroundColor: 'black' },
+  },
+  submitButton: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
   },
   submissionsBox: {
     marginTop: '5rem',
@@ -57,6 +79,16 @@ const useStyles = makeStyles((theme) => ({
   imageGridList: {
     width: '100%',
     height: '100%',
+  },
+  winnerTag: {
+    margin: theme.spacing(1.5, 4, 2),
+    width: 95,
+    height: 35,
+    borderRadius: 0,
+    fontSize: 15,
+    backgroundColor: 'white',
+    fontWeight: 'bold',
+    color: 'black',
   },
 }));
 
