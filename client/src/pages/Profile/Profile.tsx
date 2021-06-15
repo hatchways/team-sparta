@@ -28,7 +28,6 @@ export default function Profile({ user }: Props): JSX.Element {
   const [value, setValue] = useState(0);
   const [userContests, setUserContests] = useState<[Contest]>();
 
-
   const MyTheme = createMuiTheme({
     palette: {
       primary: {
@@ -67,7 +66,6 @@ export default function Profile({ user }: Props): JSX.Element {
     );
   }
 
-
   const handleChange = (event: React.ChangeEvent<Record<string, unknown>>, newValue: number) => {
     setValue(newValue);
   };
@@ -81,7 +79,6 @@ export default function Profile({ user }: Props): JSX.Element {
   };
 
   useEffect(() => {
-
     async function fetchContestsForUser() {
       const response = await getContestsByUser();
 
@@ -92,7 +89,6 @@ export default function Profile({ user }: Props): JSX.Element {
     }
 
     fetchContestsForUser();
-
   }, []);
 
   return (

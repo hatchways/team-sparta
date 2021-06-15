@@ -74,7 +74,6 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
 });
 
 exports.getAllSubmissions = asyncHandler(async (req, res, next) => {
-    console.log(req.params);
     const contest_id = req.params.id;
     const Creator = req.params.creator;
     console.log("contest id",contest_id);
