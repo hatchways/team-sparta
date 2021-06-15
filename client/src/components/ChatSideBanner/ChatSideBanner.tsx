@@ -39,7 +39,7 @@ const ChatSideBanner = ({ loggedInUser }: Props): JSX.Element => {
           >
             <DashboardNav to="/" primary="Discover" />
             <DashboardNav to="/message" primary="Message" />
-            <DashboardNav to="/viewcontestsubmissions" primary="View Submissions" />
+            <DashboardNav to="/viewcontestsubmissions/60b6b804d636a444d2422251" primary="View Submissions" />
           </ThemeProvider>
 
           <Notification />

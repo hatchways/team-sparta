@@ -12,3 +12,9 @@ export interface AuthApiData {
   success?: AuthApiDataSuccess;
   contests?: [Contest];
 }
+
+export interface AuthApiDataId {
+  error?: { message: string };
+  success?: AuthApiDataSuccess;
+  contest?: Contest;
+}

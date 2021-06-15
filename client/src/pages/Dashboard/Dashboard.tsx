@@ -45,12 +45,12 @@ export default function Dashboard(): JSX.Element {
           <ProtectedRoute exact path="/message" loggedInUser={loggedInUser} component={Message} />
           <ProtectedRoute exact path="/profile" loggedInUser={loggedInUser} component={Profile} />
           <ProtectedRoute exact path="/editProfile" loggedInUser={loggedInUser} component={EditProfile} />
-          <ProtectedRoute exact path="/contest" loggedInUser={loggedInUser} component={Contest} />
+          <ProtectedRoute exact path="/contest/:id" loggedInUser={loggedInUser} component={Contest} />
           <ProtectedRoute exact path="/contestForm" loggedInUser={loggedInUser} component={ContestForm} />
           <ProtectedRoute exact path="/submission" loggedInUser={loggedInUser} component={Submission} />
           <ProtectedRoute
             exact
-            path="/viewcontestsubmissions"
+            path="/viewcontestsubmissions/:id"
             loggedInUser={loggedInUser}
             component={ViewContestSubmissions}
           />

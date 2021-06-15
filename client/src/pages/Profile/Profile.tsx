@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { User } from '../../interface/User';
 import { Link } from 'react-router-dom';
 import useStyles from './useStyles';
+import { useAuth } from '../../context/useAuthContext';
 import ListView from '../../components/ListView/ListView';
 import { getContestsByUser } from '../../helpers/APICalls/contest';
 import { Contest } from '../../interface/Contest';
