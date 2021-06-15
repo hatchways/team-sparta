@@ -20,9 +20,6 @@ export default function Discovery(): JSX.Element {
       if (response) {
         const contests = response.contests;
         setAllContests(contests);
-        if (allContests) {
-          console.log(allContests);
-        }
       }
     }
     fetchAllContests();
