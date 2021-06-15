@@ -29,7 +29,7 @@ exports.getConversationById = asyncHandler(async (req, res, next) => {
 
 exports.getAllConversation = asyncHandler(async (req, res, next) => {
   const conversations = await Conversation.find({
-    participants: req.params.userId,
+    participants: req.userId,
   });
 
   if (!conversations) {

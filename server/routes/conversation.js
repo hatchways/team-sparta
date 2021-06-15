@@ -10,7 +10,7 @@ const {
 router.use(protect);
 
 router.route("/").post(createConversation);
-router.route("/conversations/:userId").get(getAllConversation);
+router.route("/conversations/").get(getAllConversation);
 router.route("/:id/:userId").get(getConversationById);
 
 
