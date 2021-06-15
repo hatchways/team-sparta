@@ -1,5 +1,6 @@
 import react, { useState, useEffect } from 'react';
 import { Grid, Typography, Box, Chip, Avatar, Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -83,7 +84,9 @@ export default function ViewContestSubmissions(): JSX.Element {
           </Grid>
           {contestCard.id !== contestOwnerId ? (
             <Grid item>
-              <Button className={classes.accBtn}>Submit</Button>
+              <Button component={Link} to="/submission" className={classes.accBtn}>
+                Submit
+              </Button>
             </Grid>
           ) : null}
         </Grid>
