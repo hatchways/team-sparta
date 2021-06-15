@@ -44,7 +44,7 @@ const uploadMultiImage = multer({
           Date.now() +
           path.extname(file.originalname)
       );
-    },
+    }
   }),
   limits: { fileSize: 2000000 },
   fileFilter: function (req, file, callback) {

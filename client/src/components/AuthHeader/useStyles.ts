@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#000000',
     color: '#f4f4f4',
     boxShadow: 'none',
-    marginRight: 35,
+    marginRight: 1,
     display: 'flex',
     alignItems: 'right',
     '&:hover': { color: 'black' },
@@ -57,6 +57,7 @@ const useStyles = makeStyles(() => ({
     alignSelf: 'left',
     alignItems: 'left',
     marginLeft: 0,
+    width: 'auto',
   },
 }));
 
