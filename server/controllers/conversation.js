@@ -48,7 +48,6 @@ exports.createConversation = asyncHandler(async (req, res, next) => {
     messages: messages,
     participants: participants,
   });
-  console.log(createdConversation);
   if (createdConversation) {
     res.status(201).json({
       success: {
