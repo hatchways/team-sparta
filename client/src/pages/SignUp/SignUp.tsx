@@ -10,11 +10,18 @@ import SignUpForm from './SignUpForm/SignUpForm';
 import AuthHeader from '../../components/AuthHeader/AuthHeader';
 import { useAuth } from '../../context/useAuthContext';
 import { useSnackBar } from '../../context/useSnackbarContext';
+import { useHistory } from 'react-router-dom';
 
 export default function Register(): JSX.Element {
   const classes = useStyles();
   const { updateLoginContext } = useAuth();
   const { updateSnackBarMessage } = useSnackBar();
+  const { loggedInUser } = useAuth();
+  const history = useHistory();
+
+  if (loggedInUser) {
+    history.push('/');
+  }
 
   const handleSubmit = (
     { username, email, password }: { email: string; password: string; username: string },

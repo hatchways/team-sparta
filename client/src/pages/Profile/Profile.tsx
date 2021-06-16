@@ -12,21 +12,21 @@ import {
   createMuiTheme,
 } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import { User } from '../../interface/User';
 import { Link } from 'react-router-dom';
 import useStyles from './useStyles';
 import ListView from '../../components/ListView/ListView';
 import { getContestsByUser } from '../../helpers/APICalls/contest';
 import { Contest } from '../../interface/Contest';
-interface Props {
-  loggedIn: boolean;
-  user: User;
-}
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { useAuth } from '../../context/useAuthContext';
 
-export default function Profile({ user }: Props): JSX.Element {
+export default function Profile(): JSX.Element {
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [userContests, setUserContests] = useState<[Contest]>();
+  const { loggedInUser } = useAuth();
+
+  if (loggedInUser === undefined) return <CircularProgress />;
 
   const MyTheme = createMuiTheme({
     palette: {
@@ -93,8 +93,12 @@ export default function Profile({ user }: Props): JSX.Element {
 
   return (
     <Grid className={classes.profileContent} container direction="column" alignItems="center">
-      <Avatar className={classes.userImage} alt="Profile Image" src={`https://robohash.org/${user.email}.png`} />
-      <Typography className={classes.userName}>{user.username}</Typography>
+      <Avatar
+        className={classes.userImage}
+        alt="Profile Image"
+        src={`https://robohash.org/${!loggedInUser ? 'loading' : loggedInUser.email}.png`}
+      />
+      <Typography className={classes.userName}>{!loggedInUser ? 'loading' : loggedInUser.username}</Typography>
       <Link to={'/dashboard/EditProfile'} className={classes.link}>
         <Button className={classes.button} color="inherit" variant="contained" disableElevation>
           Edit Profile

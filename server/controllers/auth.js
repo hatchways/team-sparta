@@ -22,10 +22,13 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
     throw new Error("A user with that username already exists");
   }
 
+  const sessionId = "";
+
   const user = await User.create({
     username,
     email,
-    password
+    password,
+    sessionId,
   });
 
   if (user) {
@@ -42,7 +45,8 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
         user: {
           id: user._id,
           username: user.username,
-          email: user.email
+          email: user.email,
+          sessionId: user.sessionId,
         }
       }
     });
@@ -74,7 +78,8 @@ exports.loginUser = asyncHandler(async (req, res, next) => {
         user: {
           id: user._id,
           username: user.username,
-          email: user.email
+          email: user.email,
+          sessionId: user.sessionId
         }
       }
     });
@@ -100,7 +105,8 @@ exports.loadUser = asyncHandler(async (req, res, next) => {
       user: {
         id: user._id,
         username: user.username,
-        email: user.email
+        email: user.email,
+        sessionId: user.sessionId
       }
     }
   });

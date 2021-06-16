@@ -1,8 +1,12 @@
 import { useState, useContext, createContext, FunctionComponent, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 
+interface ISocket extends Socket {
+  userID?: string;
+}
+
 interface ISocketContext {
-  socket: Socket | undefined;
+  socket: ISocket | undefined;
   initSocket: () => void;
 }
 
@@ -19,10 +23,17 @@ export const SocketProvider: FunctionComponent = ({ children }): JSX.Element => 
     setSocket(
       io('/', {
         withCredentials: true,
+        autoConnect: false,
       }),
     );
+    if (socket) {
+      socket?.onAny((event, ...args) => {
+        console.log(event, args);
+      });
+    }
   }, []);
 
+  console.log(socket);
   return <SocketContext.Provider value={{ socket, initSocket }}>{children}</SocketContext.Provider>;
 };
 

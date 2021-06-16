@@ -4,7 +4,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './useStyles';
 import { useAuth } from '../../context/useAuthContext';
 import { useSocket } from '../../context/useSocketContext';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { useEffect } from 'react';
 import ChatSideBanner from '../../components/ChatSideBanner/ChatSideBanner';
 import Discover from '../Discover/Discover';
@@ -17,15 +17,40 @@ import ViewContestSubmissions from '../ViewContestSubmissions/ViewContestSubmiss
 import ContestForm from '../Contest/ContestForm/ContestForm';
 import AuthHeader from '../../components/AuthHeader/AuthHeader';
 import ProtectedRoute from '../../components/ProtectedRoute/ProtectedRoute';
+import { io, Socket } from 'socket.io-client';
 
 export default function Dashboard(): JSX.Element {
   const classes = useStyles();
   const { loggedInUser } = useAuth();
   const { initSocket } = useSocket();
+  const { socket } = useSocket();
 
   useEffect(() => {
     initSocket();
   }, [initSocket]);
+
+  if (loggedInUser && socket) {
+    socket.auth = { loggedInUser };
+    socket.connect();
+    console.log('Connected');
+  }
+
+  useEffect(() => {
+    const sessionID = localStorage.getItem('sessionID');
+    if (socket && loggedInUser) {
+      if (sessionID) {
+        socket.auth = { sessionID };
+        socket.connect();
+      }
+      console.log('its connecting again');
+
+      socket.on('session', ({ sessionID, userID }) => {
+        socket.auth = { sessionID };
+        localStorage.setItem('sessionID', sessionID);
+        socket.userID = userID;
+      });
+    }
+  }, [socket, loggedInUser]);
 
   if (loggedInUser === undefined) return <CircularProgress />;
 
@@ -54,6 +79,15 @@ export default function Dashboard(): JSX.Element {
             loggedInUser={loggedInUser}
             component={ViewContestSubmissions}
           />
+          {loggedInUser ? (
+            <Route path="*">
+              <Redirect to="/" />
+            </Route>
+          ) : (
+            <Route path="*">
+              <Redirect to="/login" />
+            </Route>
+          )}
         </Switch>
       </Grid>
     </Grid>
