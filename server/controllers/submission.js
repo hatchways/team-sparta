@@ -76,8 +76,6 @@ exports.createSubmission = asyncHandler(async (req, res, next) => {
 exports.getAllSubmissions = asyncHandler(async (req, res, next) => {
     const contest_id = req.params.id;
     const Creator = req.params.creator;
-    console.log("contest id",contest_id);
-    console.log("creator", Creator);
     
     if(!contest_id){
         res.status(404);
