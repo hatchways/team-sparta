@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
   contestFormLabel: {
     fontSize: 16,
     fontWeight: 700,
-    padding: '20px',
+    padding: '15px',
   },
   spanLabel: {
     fontSize: '12px',

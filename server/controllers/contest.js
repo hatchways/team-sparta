@@ -172,3 +172,62 @@ exports.createContestCharge = asyncHandler(async (req, res, next) => {
     }
   }
 });
+
+//This function is not complete yet it will be updated
+// The values are just for testing on stripe since we will
+// not be actually transferring money to any accounts
+exports.selectContestWinner = asyncHandler(async (req, res, next) => {
+  const account = await stripe.accounts.create({
+    type: "custom",
+    country: "CA",
+    email: "bob.rosen@example.com",
+    business_type: "individual",
+    business_profile: {
+      product_description: "Demo",
+    },
+    individual: {
+      first_name: "magic",
+      last_name: "user",
+      email: "demo@example.com",
+      id_number: 111111234,
+      dob: {
+        day: 10,
+        month: 11,
+        year: 1980,
+      },
+      address: {
+        city: "Toronto",
+        line1: "123 State St",
+        postal_code: "M1T1A2",
+        state: "ON",
+      },
+      phone: 8888675309,
+    },
+    metadata: {
+      internal_id: "42",
+    },
+    tos_acceptance: {
+      date: Math.floor(Date.now() / 1000),
+      ip: req.connection.remoteAddress,
+    },
+    capabilities: {
+      card_payments: { requested: true },
+      transfers: { requested: true },
+    },
+  });
+
+  const transfer = await stripe.transfers.create({
+    amount: 400,
+    currency: "cad",
+    destination: "acct_1J2R38Q6sIiNqyks",
+  });
+
+  if (transfer) {
+    res.status(200).json({
+      message: "Prize Money sent to contest winner",
+    });
+  } else {
+    res.status(500);
+    throw new Error("Insuffcient Funds, cannot send money");
+  }
+});

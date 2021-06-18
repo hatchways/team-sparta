@@ -38,6 +38,7 @@ const useStyles = makeStyles(() => ({
     },
     '& .MuiOutlinedInput-input': {
       padding: '12px 10px',
+      height: '17px',
     },
   },
 
@@ -58,12 +59,21 @@ const useStyles = makeStyles(() => ({
   },
   imageGridList: {
     width: 400,
-    height: 300,
+    height: 250,
+    overflowY: 'scroll',
+  },
+  image: {
+    '&:hover': { opacity: '0.6', cursor: 'pointer' },
   },
   contestImages: {
     marginTop: '50px',
     border: '1px solid lightgrey',
     padding: '20px',
+  },
+  uploadButton: {
+    textAlignLast: 'center',
+    width: '100%',
+    marginTop: '20px',
   },
   contestPrizeError: {
     color: 'red',
@@ -71,9 +81,10 @@ const useStyles = makeStyles(() => ({
   },
   prizeInput: {
     border: '1px solid lightgrey',
-    '&:hover': { border: '1px solid black' },
-    '&&&:before': {
-      border: 'none',
+    height: '40px',
+    '&:hover': { border: '1px solid blue' },
+    '&.MuiInput-underline:after': {
+      borderBottom: 'none',
     },
   },
 }));

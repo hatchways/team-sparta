@@ -3,7 +3,7 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import useStyles from './useStyles';
 
 import { getCustomerInfo } from '../../helpers/APICalls/customer';
-import { chargeCard } from '../../helpers/APICalls/contest';
+import { addImagesToAWS, chargeCard, createContest } from '../../helpers/APICalls/contest';
 
 import { Customer } from '../../interface/User';
 
@@ -12,16 +12,19 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import { useHistory } from 'react-router-dom';
 
 interface IProps {
   title: string;
   description: string;
   price: number;
+  deadline: Date | string;
+  imageArray?: File[];
   closeModel: () => void;
 }
 
 export const CheckOutModal = (Props: IProps): JSX.Element => {
-  const { title, description, price, closeModel } = Props;
+  const { title, description, price, deadline, imageArray } = Props;
   const [isLoading, setLoading] = useState(false);
   const [customer, setCustomer] = useState<Customer>();
   const [open, setOpen] = useState(false);
@@ -30,6 +33,7 @@ export const CheckOutModal = (Props: IProps): JSX.Element => {
   const stripe = useStripe();
   const elements = useElements();
   const classes = useStyles();
+  const history = useHistory();
 
   const handleClose = () => {
     setOpen(false);
@@ -48,19 +52,51 @@ export const CheckOutModal = (Props: IProps): JSX.Element => {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    //This is a stripe to typscript issue where even doe we have the properties
+    //Typescript displays n
     if (!stripe || !elements) {
       setLoading(true);
       return;
     }
 
+    const data = new FormData();
+    // if any files selected
+    if (imageArray) {
+      for (let i = 0; i < imageArray.length; i++) {
+        data.append(
+          //this is gonna be the name of the response object. needs to match what's in the function(routes/api/profile.js line 38)
+          'multiImage',
+          imageArray[i],
+          imageArray[i].name,
+        );
+      }
+    }
+
     if (customer) {
+      setLoading(true);
       const paymentData = { customer, price };
       const response = await chargeCard(paymentData);
-      console.log('response', response);
       if (response.success) {
-        setMessage(response.success.message);
-        setOpen(true);
-        setLoading(false);
+        const imageResponse = await addImagesToAWS(data);
+        if (imageResponse) {
+          const contestDetails = {
+            title,
+            description,
+            price,
+            end_date: deadline,
+            images: imageResponse.locationArray,
+          };
+          const contest = await createContest(contestDetails);
+          if (contest.success) {
+            setMessage(response.success.message);
+            setOpen(true);
+            setLoading(false);
+            setTimeout(() => {
+              history.push('/profile');
+            }, 3000);
+          }
+        }
       } else {
         setOpen(true);
         setMessage(response.error?.message);
@@ -83,9 +119,26 @@ export const CheckOutModal = (Props: IProps): JSX.Element => {
       const response = await chargeCard(paymentData);
 
       if (response.success) {
-        setMessage(response.success.message);
-        setOpen(true);
-        setLoading(false);
+        const imageResponse = await addImagesToAWS(data);
+        if (imageResponse) {
+          const contestDetails = {
+            title,
+            description,
+            price,
+            end_date: deadline,
+            images: imageResponse.locationArray,
+          };
+          const contest = await createContest(contestDetails);
+
+          if (contest.success) {
+            setMessage(response.success.message);
+            setOpen(true);
+            setLoading(false);
+            setTimeout(() => {
+              history.push('/profile');
+            }, 3000);
+          }
+        }
       } else {
         setOpen(true);
         setMessage(response.error?.message);
@@ -114,6 +167,7 @@ export const CheckOutModal = (Props: IProps): JSX.Element => {
       <Grid container className={classes.checkoutContainer}>
         <Typography className={classes.contestFormLabel}>Contest Name: {title}</Typography>
         <Typography className={classes.contestFormLabel}>Contest Description: {description}</Typography>
+        <Typography className={classes.contestFormLabel}>Contest Deadline: {deadline}</Typography>
         <Grid item>
           <Typography className={classes.contestFormLabel}>Price: ${price}</Typography>
           <Typography className={classes.spanLabel}>contains $5 fee</Typography>
