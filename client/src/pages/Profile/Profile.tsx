@@ -27,6 +27,7 @@ export default function Profile(): JSX.Element {
   const [userContests, setUserContests] = useState<[Contest]>();
   const { loggedInUser } = useAuth();
 
+
   const MyTheme = createMuiTheme({
     palette: {
       primary: {
