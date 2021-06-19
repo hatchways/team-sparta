@@ -21,7 +21,7 @@ interface RouteParams {
   id: string;
 }
 
-export default function Contestt(): JSX.Element {
+export default function ViewContestSubmissions(): JSX.Element {
   const classes = useStyles();
   const [contestCard, setContestCard] = useState<Contest>(Object);
   const [winnerIndex, setWinnerIndex] = useState(-1);

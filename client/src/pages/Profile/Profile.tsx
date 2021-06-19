@@ -15,10 +15,10 @@ import { useEffect, useState } from 'react';
 import { User } from '../../interface/User';
 import { Link } from 'react-router-dom';
 import useStyles from './useStyles';
+import { useAuth } from '../../context/useAuthContext';
 import ListView from '../../components/ListView/ListView';
 import { getContestsByUser } from '../../helpers/APICalls/contest';
 import { Contest } from '../../interface/Contest';
-import { useAuth } from '../../context/useAuthContext';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default function Profile(): JSX.Element {
@@ -91,6 +91,7 @@ export default function Profile(): JSX.Element {
   }, []);
 
   if (loggedInUser) {
+    console.log('loggedinuser', loggedInUser);
     return (
       <Grid className={classes.profileContent} container direction="column" alignItems="center">
         <Avatar

@@ -11,11 +11,12 @@ import Discover from '../Discover/Discover';
 import Message from '../Message/Message';
 import Profile from '../Profile/Profile';
 import Submission from '../Submission/Submission';
-import Contest from '../Contest/Contest';
 import EditProfile from '../Profile/EditProfile/EditProfile';
+import ViewContestSubmissions from '../ViewContestSubmissions/ViewContestSubmissions';
 import ContestForm from '../Contest/ContestForm/ContestForm';
 import AuthHeader from '../../components/AuthHeader/AuthHeader';
 import ProtectedRoute from '../../components/ProtectedRoute/ProtectedRoute';
+import Contestt from '../Contest/Contest';
 
 export default function Dashboard(): JSX.Element {
   const classes = useStyles();
@@ -44,9 +45,15 @@ export default function Dashboard(): JSX.Element {
           <ProtectedRoute exact path="/message" loggedInUser={loggedInUser} component={Message} />
           <ProtectedRoute exact path="/profile" loggedInUser={loggedInUser} component={Profile} />
           <ProtectedRoute exact path="/editProfile" loggedInUser={loggedInUser} component={EditProfile} />
-          <ProtectedRoute exact path="/contest" loggedInUser={loggedInUser} component={Contest} />
+          <ProtectedRoute exact path="/contest/:id" loggedInUser={loggedInUser} component={Contestt} />
           <ProtectedRoute exact path="/contestForm" loggedInUser={loggedInUser} component={ContestForm} />
           <ProtectedRoute exact path="/submission" loggedInUser={loggedInUser} component={Submission} />
+          <ProtectedRoute
+            exact
+            path="/viewcontestsubmissions/:id"
+            loggedInUser={loggedInUser}
+            component={ViewContestSubmissions}
+          />
         </Switch>
       </Grid>
     </Grid>
