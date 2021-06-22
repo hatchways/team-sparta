@@ -101,6 +101,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
     '&:hover': { color: 'black', backgroundColor: 'white' },
   },
+  submissionImage: {
+    height: '125px',
+    padding: '20px',
+  },
 }));
 
 export default useStyles;

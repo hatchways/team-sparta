@@ -72,10 +72,22 @@ export const addImagesToAWS = async (data: FormData): Promise<any> => {
   return await axios
     .post('upload/images-upload', data, config)
     .then((res) => {
-      console.log(res);
       return res.data;
     })
     .catch(() => ({
       error: { message: 'Unable to connect to server' },
+    }));
+};
+
+export const getSubmissionsForUser = async (): Promise<any> => {
+  const fetchOptions: FetchOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  };
+  return await fetch(`/submission/user`, fetchOptions)
+    .then((res) => res.json())
+    .catch(() => ({
+      error: { message: 'Unable to connect to server. Please try again' },
     }));
 };

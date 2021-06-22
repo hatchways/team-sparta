@@ -1,5 +1,5 @@
-import react, { useState, useEffect } from 'react';
-import { Grid, Typography, Box, Chip, Avatar, Button } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Grid, Typography, Box, Chip, Button } from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -10,34 +10,43 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './useStyles';
 // mock data 4 now
 //import { Contest as Contesto, Contests } from '../../interface/tempContestData';
-import { Submissions } from '../../interface/tempSubmissionData';
+import { Submission, Submissions } from '../../interface/tempSubmissionData';
 import { getContestById } from '../../helpers/APICalls/contest';
-import { RouteComponentProps, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Contest } from '../../interface/Contest';
+import moment from 'moment';
+import Modal from '@material-ui/core/Modal';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+
 // Used to test the two views. 1 is the id of the contest owner and shows the owner view(view all submissions, pick winner). 2 shows the submittor view(contest deets and submit button)
-const contestOwnerId = 11;
 
 interface RouteParams {
   id: string;
 }
 
+interface sub {
+  files: string[];
+  _id: string;
+  creator: string;
+}
+
 export default function Contestt(): JSX.Element {
   const classes = useStyles();
   const [contestCard, setContestCard] = useState<Contest>(Object);
+  const [submissions, setSubmissions] = useState<[sub]>();
   const [winnerIndex, setWinnerIndex] = useState(-1);
+  const [tempIndex, setTempIndex] = useState(0);
+  const [contestEnded, setContestEnded] = useState(false);
+  const [openModal, setModal] = useState(false);
+
   const { loggedInUser } = useAuth();
 
   const params = useParams<RouteParams>();
 
-  console.log(params);
-  //   pulling dummy data for now
-  // const handleContest = () => {
-  //   setContestCard(Contests[0]);
-  // };
-
-  // useEffect(() => {
-  //   handleContest();
-  // }, [contestCard]);
+  const handleModalClose = () => {
+    setModal(false);
+  };
 
   useEffect(() => {
     async function fetchContestById() {
@@ -45,44 +54,53 @@ export default function Contestt(): JSX.Element {
 
       if (response) {
         const contest = response.contest;
+        console.log('response', contest);
         if (contest) {
           setContestCard(contest);
+          if (moment.utc(contest.end_date).format('YYYY-MM-DD') <= moment().format('YYYY-MM-DD')) {
+            setContestEnded(true);
+          }
+          if (contest.submissions) {
+            console.log('contest submissions', contest.submissions);
+            setSubmissions(contest.submissions);
+          }
         }
       }
     }
     fetchContestById();
   }, [params]);
-  if (contestCard && loggedInUser) {
-    console.log('user ID', loggedInUser.id);
-    console.log('infinite ', contestCard);
-  }
+
   if (loggedInUser === undefined) return <CircularProgress />;
   const handleWinnerIndex = (index: number) => {
-    setWinnerIndex(index);
+    setTempIndex(index);
+    setModal(true);
+    console.log('card', contestCard);
+    console.log('choose winner', contestEnded);
   };
 
-  const renderImageList = (): JSX.Element[] => {
-    return Submissions.map((tile, index) => {
-      return (
+  //This is a work in progress will be changed in next PR
+  const selectWinner = async () => {
+    console.log(tempIndex);
+
+    const response = await fetch('/contest/winner');
+    console.log('response', response);
+  };
+
+  const renderImageList = (): JSX.Element[] | JSX.Element => {
+    return submissions && submissions.length > 0 ? (
+      submissions.map((tile, index) => (
         <GridListTile key={index}>
-          <img src={tile.img} alt={tile.title} />
+          <img src={tile.files[0]} />
           <GridListTileBar
-            title={tile.title}
-            subtitle={<span>by: {tile.author}</span>}
             actionIcon={
               index >= 0 && index === winnerIndex ? (
-                <IconButton
-                  key={index}
-                  aria-label={`info about ${tile.title}`}
-                  onClick={() => handleWinnerIndex(index)}
-                  className={classes.icon}
-                >
+                <IconButton key={index} onClick={() => handleWinnerIndex(index)} className={classes.icon}>
                   <Chip className={classes.winnerTag} label="Winner"></Chip>
                 </IconButton>
               ) : (
                 <IconButton
+                  disabled={!contestEnded}
                   key={index}
-                  aria-label={`info about ${tile.title}`}
                   onClick={() => handleWinnerIndex(index)}
                   className={classes.icon}
                 >
@@ -92,10 +110,11 @@ export default function Contestt(): JSX.Element {
             }
           />
         </GridListTile>
-      );
-    });
+      ))
+    ) : (
+      <div>No Submissions</div>
+    );
   };
-
   return (
     <Grid container spacing={5} direction="column" className={classes.root}>
       <Box className={classes.contestBox}>
@@ -107,26 +126,68 @@ export default function Contestt(): JSX.Element {
         </Grid>
         <Grid container className={classes.submitButton}>
           <Grid className={classes.authorInfo} item>
-            {/* <Avatar alt="Profile Image" src={`https://robohash.org/${loggedInUser.email}.png`} /> */}
             <Typography className={classes.creatorName} variant="h6" color="textPrimary">
-              By {contestCard.creator}
+              {contestCard.description}
             </Typography>
           </Grid>
+
           {contestCard.creator !== loggedInUser?.id ? (
             <Grid item>
-              <Button className={classes.accBtn}>Submit</Button>
+              <Button
+                component={Link}
+                to={{
+                  pathname: '/submission',
+                  state: {
+                    contest: contestCard,
+                    user: loggedInUser ? loggedInUser : null,
+                  },
+                }}
+                className={classes.accBtn}
+                color="inherit"
+                variant="contained"
+              >
+                Submit
+              </Button>
             </Grid>
           ) : null}
         </Grid>
       </Box>
       {contestCard.creator === loggedInUser?.id ? (
-        <Box boxShadow={1} className={classes.submissionsBox}>
+        <React.Fragment>
+          {contestEnded && (
+            <Typography style={{ marginTop: '30px' }}>Winner can be selected by clicking submission</Typography>
+          )}
           <Grid container justify="center" className={classes.contestImages}>
             <GridList cellHeight={300} cols={4} spacing={30} className={classes.imageGridList}>
               {renderImageList()}
             </GridList>
           </Grid>
-        </Box>
+          <Modal open={openModal} onBackdropClick={handleModalClose}>
+            <Grid container className={classes.modalContainer}>
+              <Typography>Confirm Winning Submission</Typography>
+              <Grid item>
+                <Button
+                  type="button"
+                  onClick={selectWinner}
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Yes
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleModalClose}
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  No
+                </Button>
+              </Grid>
+            </Grid>
+          </Modal>
+        </React.Fragment>
       ) : null}
     </Grid>
   );

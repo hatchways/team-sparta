@@ -72,9 +72,10 @@ const useStyles = makeStyles((theme) => ({
     color: 'rgba(255, 255, 255, 0.54)',
   },
   contestImages: {
-    marginTop: '50px',
+    margin: '25px 0',
     border: '1px solid lightgrey',
     padding: '20px',
+    width: '75%',
   },
   imageGridList: {
     width: '100%',
@@ -90,6 +91,30 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
     color: 'black',
   },
+  modalContainer: {
+    backgroundColor: 'white',
+    display: 'flex',
+    width: '50%',
+    height: '20%',
+    margin: '125px auto',
+    flexDirection: 'column',
+    textAlign: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  submit: {
+    width: 200,
+    height: 56,
+    borderRadius: 0,
+    margin: 20,
+    fontSize: 16,
+    backgroundColor: 'black',
+    fontWeight: 'bold',
+    '&:hover': { color: 'black', backgroundColor: 'white' },
+  },
+  // selectWinnerText: {
+  //   marginTop: '25px',
+  // },
 }));
 
 export default useStyles;

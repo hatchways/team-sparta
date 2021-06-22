@@ -1,3 +1,4 @@
+const User = require("../models/User");
 const Contest = require("../models/Contest");
 const asyncHandler = require("express-async-handler");
 const stripe = require("stripe")(process.env.StripeKeyBackend);
@@ -5,7 +6,10 @@ const stripe = require("stripe")(process.env.StripeKeyBackend);
 exports.getContestById = asyncHandler(async (req, res, next) => {
   const contestId = req.params.id;
 
-  let contest = await Contest.findById(contestId);
+  let contest = await Contest.findById(contestId).populate(
+    "submissions",
+    "_id files creator"
+  );
 
   if (!contest) {
     res.status(404);

@@ -17,14 +17,22 @@ import { Link } from 'react-router-dom';
 import useStyles from './useStyles';
 import { useAuth } from '../../context/useAuthContext';
 import ListView from '../../components/ListView/ListView';
-import { getContestsByUser } from '../../helpers/APICalls/contest';
+import { getContestsByUser, getSubmissionsForUser } from '../../helpers/APICalls/contest';
 import { Contest } from '../../interface/Contest';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+interface Submission {
+  _id: string;
+  title: string;
+  description: string;
+  images: string;
+  date: Date | string;
+  price: string | number;
+}
 export default function Profile(): JSX.Element {
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [userContests, setUserContests] = useState<[Contest]>();
+  const [submissions, setSubmissions] = useState<Submission[]>();
   const { loggedInUser } = useAuth();
 
   const MyTheme = createMuiTheme({
@@ -77,13 +85,21 @@ export default function Profile(): JSX.Element {
     return userContests ? userContests.filter((e) => new Date(e.end_date) < new Date()) : [];
   };
 
+  const handleSubmission = () => {
+    return submissions ? submissions : [];
+  };
+
   useEffect(() => {
     async function fetchContestsForUser() {
       const response = await getContestsByUser();
-
+      const submissionData = await getSubmissionsForUser();
       if (response) {
         const contests = response.contests;
         setUserContests(contests);
+      }
+
+      if (submissionData) {
+        setSubmissions(submissionData.success);
       }
     }
 
@@ -91,7 +107,6 @@ export default function Profile(): JSX.Element {
   }, []);
 
   if (loggedInUser) {
-    console.log('loggedinuser', loggedInUser);
     return (
       <Grid className={classes.profileContent} container direction="column" alignItems="center">
         <Avatar
@@ -105,7 +120,6 @@ export default function Profile(): JSX.Element {
             Edit Profile
           </Button>
         </Link>
-
         <Box className={classes.tabContainer}>
           <AppBar className={classes.tabBar} position="static" elevation={0}>
             <ThemeProvider theme={MyTheme}>
@@ -125,13 +139,13 @@ export default function Profile(): JSX.Element {
           </AppBar>
           <Paper elevation={2} square>
             <TabPanel value={value} index={0}>
-              <ListView data={handleInProg()} message={'No Contest In Progress'} route={'/dashboard/contest'} />
+              <ListView data={handleInProg()} message={'No Contest In Progress'} route={'/contest'} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <ListView data={handleComp()} message={'No Contest Completed'} route={'/dashboard/contest'} />
+              <ListView data={handleComp()} message={'No Contest Completed'} route={'/contest'} />
             </TabPanel>
             <TabPanel value={value} index={2}>
-              Submission stuff
+              <ListView data={handleSubmission()} message={'No Contest Completed'} route={'/contest'} />
             </TabPanel>
           </Paper>
         </Box>

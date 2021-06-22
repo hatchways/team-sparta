@@ -6,7 +6,7 @@ const contestSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   end_date: { type: Date, required: true },
   start_date: { type: Date, default: Date.now },
-  creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
+  creator: { type: mongoose.Types.ObjectId, required: true, ref: "user" },
   images: [{ type: String }],
   submissions: [{ type: mongoose.Types.ObjectId, ref: "Submission" }],
 });
