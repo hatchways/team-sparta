@@ -11,11 +11,15 @@ const logger = require("morgan");
 
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
+
 const uploadRouter = require("./routes/uploadimg");
 const notificationRouter = require("./routes/notification");
 const emailRouter = require("./routes/sendEmail");
+
 const contestRouter = require("./routes/contest");
 const submissionRouter = require("./routes/submission");
+const messageRouter = require('./routes/message');
+const conversationRouter = require('./routes/conversation');
 
 const { json, urlencoded } = express;
 
@@ -53,6 +57,8 @@ app.use("/upload", uploadRouter);
 app.use("/contest", contestRouter);
 app.use("/notifications", notificationRouter);
 app.use("/submission", submissionRouter);
+app.use("/message", messageRouter);
+app.use("/conversation", conversationRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/client/build")));

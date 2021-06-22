@@ -20,7 +20,6 @@ export default function EditProfile(): JSX.Element {
 
       if (response) {
         const tempCustomer = response.customer;
-        console.log(tempCustomer);
         setCustomer(tempCustomer);
       }
     }

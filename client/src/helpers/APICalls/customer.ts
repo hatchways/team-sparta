@@ -5,7 +5,6 @@ export const getCustomerInfo = async (): Promise<AuthApiCustomerData> => {
   return await axios
     .get(`/users/customer`)
     .then((res) => {
-      console.log(res);
       return res.data;
     })
     .catch((err) => {
@@ -19,7 +18,6 @@ export const addCustomerInfo = async (paymentMethod: unknown): Promise<AuthApiCu
   return await axios
     .post(`/users/customer`, paymentMethod)
     .then((res) => {
-      console.log(res);
       return res.data;
     })
     .catch(() => ({
@@ -31,7 +29,6 @@ export const removeCustomerInfo = async (): Promise<AuthApiCustomerData> => {
   return await axios
     .delete(`/users/customer`)
     .then((res) => {
-      console.log(res);
       return res.data;
     })
     .catch(() => ({

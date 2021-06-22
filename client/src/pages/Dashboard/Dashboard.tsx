@@ -30,14 +30,26 @@ export default function Dashboard(): JSX.Element {
   if (loggedInUser === undefined) return <CircularProgress />;
 
   return (
-    <Grid container item xs={12} sm={12} md={12} component="main" className={`${classes.root} ${classes.dashboard}`}>
+    <Grid
+      container
+      item
+      xs={12}
+      sm={12}
+      md={12}
+      direction="column"
+      justify="flex-start"
+      component="main"
+      className={`${classes.root}`}
+    >
       <CssBaseline />
-      <Grid item className={classes.drawerWrapper}>
+      <Grid className={classes.drawerWrapper}>
         {!loggedInUser ? (
           <AuthHeader linkTo="/login" btnText="SIGN IN" />
         ) : (
           <ChatSideBanner loggedInUser={loggedInUser} />
         )}
+      </Grid>
+      <Grid className={classes.routeContainer}>
         <Switch>
           <Route exact path="/">
             <Discover />
