@@ -30,14 +30,26 @@ export default function Dashboard(): JSX.Element {
   if (loggedInUser === undefined) return <CircularProgress />;
 
   return (
-    <Grid container item xs={12} sm={12} md={12} component="main" className={`${classes.root} ${classes.dashboard}`}>
+    <Grid
+      container
+      item
+      xs={12}
+      sm={12}
+      md={12}
+      direction="column"
+      justify="flex-start"
+      component="main"
+      className={`${classes.root}`}
+    >
       <CssBaseline />
-      <Grid item className={classes.drawerWrapper}>
+      <Grid className={classes.drawerWrapper}>
         {!loggedInUser ? (
           <AuthHeader linkTo="/login" btnText="SIGN IN" />
         ) : (
           <ChatSideBanner loggedInUser={loggedInUser} />
         )}
+      </Grid>
+      <Grid className={classes.routeContainer}>
         <Switch>
           <Route exact path="/">
             <Discover />
@@ -45,7 +57,7 @@ export default function Dashboard(): JSX.Element {
           <ProtectedRoute exact path="/message" loggedInUser={loggedInUser} component={Message} />
           <ProtectedRoute exact path="/profile" loggedInUser={loggedInUser} component={Profile} />
           <ProtectedRoute exact path="/editProfile" loggedInUser={loggedInUser} component={EditProfile} />
-          <ProtectedRoute exact path="/contest" loggedInUser={loggedInUser} component={Contest} />
+          <ProtectedRoute exact path="/contest/:id" loggedInUser={loggedInUser} component={Contest} />
           <ProtectedRoute exact path="/contestForm" loggedInUser={loggedInUser} component={ContestForm} />
           <ProtectedRoute exact path="/submission" loggedInUser={loggedInUser} component={Submission} />
           <ProtectedRoute
