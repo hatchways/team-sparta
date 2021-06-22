@@ -1,5 +1,6 @@
 const Contest = require("../models/Contest");
 const asyncHandler = require("express-async-handler");
+const stripe = require("stripe")(process.env.StripeKeyBackend);
 
 exports.getContestById = asyncHandler(async (req, res, next) => {
   const contestId = req.params.id;
@@ -49,10 +50,9 @@ exports.createContest = asyncHandler(async (req, res, next) => {
   }
 });
 
-
 /**
  * Summary.
- * Authenticated User can update exisintg contests 
+ * Authenticated User can update exisintg contests
  * Description.
  * We check to see if the contest exists and if the user is the owner of the contest
  * If the user and contest are valid then the user can update the following fields
@@ -62,7 +62,7 @@ exports.createContest = asyncHandler(async (req, res, next) => {
  * @param Date date
  * @param [String] images
  * @returns updatedObject
- * 
+ *
  */
 exports.updateContest = asyncHandler(async (req, res, next) => {
   const { title, description, price, end_date, images } = req.body;
@@ -102,5 +102,132 @@ exports.updateContest = asyncHandler(async (req, res, next) => {
   } else {
     res.status(500);
     throw new Error("Could not update contest at this time, Please try again");
+  }
+});
+
+/**
+ * Summary.
+ * Authenticated User can update exisintg contests
+ * Description.
+ * We first check to see if we have a customer or token
+ * if we have a customer that means they have their card information saved
+ * and we can create a paymentIntent which must also be confirmed otherwise
+ * we get a token which we use to make a charge to the users card
+ * @param Customer? customer object (optional)
+ * @param token string used to handle stripe charges to card
+ * @param Number price
+ * @returns response object
+ *
+ */
+exports.createContestCharge = asyncHandler(async (req, res, next) => {
+  let charge;
+  const centsMultiplier = 100;
+  if (req.body.customer) {
+    const { customer, price } = req.body;
+    const priceInCents = price * centsMultiplier;
+    charge = await stripe.paymentIntents.create({
+      amount: priceInCents,
+      currency: "usd",
+      description: "Contest create charge",
+      customer: customer.customer_id,
+      off_session: false,
+      setup_future_usage: "off_session",
+    });
+
+    if (charge) {
+      const paymentIntent = await stripe.paymentIntents.confirm(charge.id, {
+        payment_method: "pm_card_visa",
+      });
+      // }
+      if (paymentIntent) {
+        res.status(201).json({
+          success: {
+            message: "Payment was successful",
+          },
+        });
+      } else {
+        res.status(500);
+        throw new Error("Payment was unsuccessful, Please try again");
+      }
+    }
+  } else {
+    const { token, price } = req.body;
+    const priceInCents = price * centsMultiplier;
+
+    charge = await stripe.charges.create({
+      amount: priceInCents,
+      currency: "usd",
+      description: "Contest create charge",
+      source: token,
+    });
+    if (charge) {
+      res.status(201).json({
+        success: {
+          message: "Payment was successful",
+        },
+      });
+    } else {
+      res.status(500);
+      throw new Error("Payment was unsuccessful, Please try again");
+    }
+  }
+});
+
+//This function is not complete yet it will be updated
+// The values are just for testing on stripe since we will
+// not be actually transferring money to any accounts
+exports.selectContestWinner = asyncHandler(async (req, res, next) => {
+  const account = await stripe.accounts.create({
+    type: "custom",
+    country: "CA",
+    email: "bob.rosen@example.com",
+    business_type: "individual",
+    business_profile: {
+      product_description: "Demo",
+    },
+    individual: {
+      first_name: "magic",
+      last_name: "user",
+      email: "demo@example.com",
+      id_number: 111111234,
+      dob: {
+        day: 10,
+        month: 11,
+        year: 1980,
+      },
+      address: {
+        city: "Toronto",
+        line1: "123 State St",
+        postal_code: "M1T1A2",
+        state: "ON",
+      },
+      phone: 8888675309,
+    },
+    metadata: {
+      internal_id: "42",
+    },
+    tos_acceptance: {
+      date: Math.floor(Date.now() / 1000),
+      ip: req.connection.remoteAddress,
+    },
+    capabilities: {
+      card_payments: { requested: true },
+      transfers: { requested: true },
+    },
+  });
+
+  const transfer = await stripe.transfers.create({
+    amount: 400,
+    currency: "cad",
+    destination: "acct_1J2R38Q6sIiNqyks",
+  });
+
+  if (transfer) {
+    res.status(200).json({
+      message: "Prize Money sent to contest winner",
+    });
+  } else {
+    res.status(500);
+    throw new Error("Insuffcient Funds, cannot send money");
   }
 });
