@@ -232,7 +232,7 @@ const ContestForm: React.FC = () => {
                     <TextField
                       name="deadline"
                       type="date"
-                      defaultValue={moment().add(1, 'day').format('YYYY-MM-DD')}
+                      defaultValue={moment().add(2, 'day').format('YYYY-MM-DD')}
                       className={classes.contestDateInput}
                       variant="outlined"
                       onChange={(e) =>

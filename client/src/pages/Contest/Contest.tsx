@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Typography, Box, Chip, Button } from '@material-ui/core';
+import { Grid, Typography, Box, Chip, Button, Snackbar } from '@material-ui/core';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -14,25 +14,29 @@ import { Contest } from '../../interface/Contest';
 import moment from 'moment';
 import Modal from '@material-ui/core/Modal';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 interface RouteParams {
   id: string;
 }
 
-interface sub {
+interface submissionResponse {
   files: string[];
   _id: string;
   creator: string;
+  is_winner: boolean;
 }
 
 export default function Contestt(): JSX.Element {
   const classes = useStyles();
   const [contestCard, setContestCard] = useState<Contest>(Object);
-  const [submissions, setSubmissions] = useState<[sub]>();
-  const [winnerIndex, setWinnerIndex] = useState(-1);
+  const [submissions, setSubmissions] = useState<[submissionResponse]>();
   const [tempIndex, setTempIndex] = useState(0);
   const [contestEnded, setContestEnded] = useState(false);
   const [openModal, setModal] = useState(false);
+  const [openMessage, setMessageToggle] = useState(false);
+  const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const { loggedInUser } = useAuth();
 
@@ -48,7 +52,6 @@ export default function Contestt(): JSX.Element {
 
       if (response) {
         const contest = response.contest;
-        console.log('response', contest);
         if (contest) {
           setContestCard(contest);
           if (moment.utc(contest.end_date).format('YYYY-MM-DD') <= moment().format('YYYY-MM-DD')) {
@@ -56,28 +59,39 @@ export default function Contestt(): JSX.Element {
           }
           if (contest.submissions) {
             console.log('contest submissions', contest.submissions);
+            if (contest.submissions.some((submission) => submission.is_winner === true)) {
+              setContestEnded(false);
+            }
             setSubmissions(contest.submissions);
           }
         }
       }
     }
     fetchContestById();
-  }, [params]);
+  }, [params, message]);
 
   if (loggedInUser === undefined) return <CircularProgress />;
   const handleWinnerIndex = (index: number) => {
     setTempIndex(index);
     setModal(true);
-    console.log('card', contestCard);
-    console.log('choose winner', contestEnded);
   };
 
-  //This is a work in progress will be changed in next PR
   const selectWinner = async () => {
-    console.log(tempIndex);
-
-    const response = await fetch('/contest/winner');
-    console.log('response', response);
+    if (submissions) {
+      setIsLoading(true);
+      const data = {
+        id: submissions[tempIndex]._id,
+        user: submissions[tempIndex].creator,
+        price: contestCard.price,
+      };
+      const response = await axios.post('/contest/winner', data);
+      if (response.data) {
+        setIsLoading(true);
+        setMessage(response.data.message);
+        setMessageToggle(true);
+        setModal(false);
+      }
+    }
   };
 
   const renderImageList = (): JSX.Element[] | JSX.Element => {
@@ -87,8 +101,13 @@ export default function Contestt(): JSX.Element {
           <img src={tile.files[0]} />
           <GridListTileBar
             actionIcon={
-              index >= 0 && index === winnerIndex ? (
-                <IconButton key={index} onClick={() => handleWinnerIndex(index)} className={classes.icon}>
+              tile.is_winner ? (
+                <IconButton
+                  key={index}
+                  onClick={() => handleWinnerIndex(index)}
+                  disabled={!contestEnded}
+                  className={classes.icon}
+                >
                   <Chip className={classes.winnerTag} label="Winner"></Chip>
                 </IconButton>
               ) : (
@@ -167,7 +186,7 @@ export default function Contestt(): JSX.Element {
                   color="primary"
                   className={classes.submit}
                 >
-                  Yes
+                  {isLoading ? <CircularProgress /> : 'Yes'}
                 </Button>
                 <Button
                   type="button"
@@ -181,6 +200,16 @@ export default function Contestt(): JSX.Element {
               </Grid>
             </Grid>
           </Modal>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            open={openMessage}
+            autoHideDuration={6000}
+            onClose={() => setMessageToggle(false)}
+            message={message}
+          />
         </React.Fragment>
       ) : null}
     </Grid>
