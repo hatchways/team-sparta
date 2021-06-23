@@ -5,7 +5,16 @@ import useStyles from './useStyles';
 import axios from 'axios';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import CloseIcon from '@material-ui/icons/Close';
+import { useLocation } from 'react-router-dom';
+import { Contest } from '../../interface/Contest';
+import { User } from '../../interface/User';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { useHistory } from 'react-router-dom';
 
+interface LocationState {
+  contest: Contest;
+  user: User | null;
+}
 export default function Submission(): JSX.Element {
   const classes = useStyles();
   // For loading file to state and allowing preview
@@ -16,6 +25,10 @@ export default function Submission(): JSX.Element {
   const [open, setOpen] = useState(false);
   //for the snackbar message
   const [message, setMessage] = useState<string>();
+  const [isLoading, setisLoading] = useState(false);
+  const history = useHistory();
+
+  const location = useLocation<LocationState>();
 
   const handleClose = () => {
     setOpen(false);
@@ -46,7 +59,7 @@ export default function Submission(): JSX.Element {
     setInputFiles(undefined);
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     const data = new FormData();
     // if file selected
     if (inputFiles) {
@@ -56,6 +69,7 @@ export default function Submission(): JSX.Element {
         inputFiles,
         inputFiles.name,
       );
+      setisLoading(true);
       // our post route. Might need to change depending on the final location in the app
       //also i have questions about the boundary property. In plain react you can set it to data._boundary but here that's not allwoed
       axios
@@ -68,34 +82,41 @@ export default function Submission(): JSX.Element {
         })
         // basic controller stuff that we can use for error handling as i refine this
         .then((response) => {
-          console.log('res', response);
           if (200 === response.status) {
             // If File is too big
+            setisLoading(false);
             if (response.data.error) {
               if ('LIMIT_FILE_SIZE' === response.data.error.code) {
                 setOpen(true);
                 setMessage('File is larger than 2 MB');
-                console.log('size too big');
               } else if ('LIMIT_UNEXPECTED_FILE' === response.data.error.code) {
-                console.log('too many pix');
+                setMessage('Error uploading file');
               } else {
                 setOpen(true);
                 setMessage('No file selected');
-
-                console.log('no file bro');
               }
             } else {
               //SUCCESS
               setOpen(true);
               setMessage('File Submitted!!');
               const fileName = response.data;
-              console.log('fileName', fileName);
+              const submissionData = {
+                contest: contest,
+                user: user,
+                file: fileName.locationArray,
+              };
+              axios.post('/submission', submissionData).then((response) => {
+                if (response.data.success) {
+                  setTimeout(() => {
+                    history.push('/profile');
+                  }, 3000);
+                }
+              });
             }
           }
         })
         .catch((error) => {
-          //if some other error
-          console.log('error', error);
+          setisLoading(false);
         });
     } else {
       setOpen(true);
@@ -103,7 +124,8 @@ export default function Submission(): JSX.Element {
     }
   };
 
-  //now displays file names and allows post to AWS
+  const { state } = location;
+  const { contest, user } = state;
 
   return (
     <Grid container spacing={5} direction="column" className={classes.root}>
@@ -149,7 +171,7 @@ export default function Submission(): JSX.Element {
           color="primary"
           className={classes.submit}
         >
-          Submit
+          {isLoading ? <CircularProgress /> : 'Submit'}
         </Button>
       </Box>
       <Box>

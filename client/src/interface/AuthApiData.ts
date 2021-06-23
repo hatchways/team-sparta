@@ -18,3 +18,8 @@ export interface AuthApiCustomerData {
   success?: { message: string };
   customer?: Customer;
 }
+export interface AuthApiDataId {
+  error?: { message: string };
+  success?: AuthApiDataSuccess;
+  contest?: Contest;
+}

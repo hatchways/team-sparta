@@ -4,8 +4,17 @@ import React, { memo } from 'react';
 import useStyles from './useStyles';
 import { Contest } from '../../interface/Contest';
 
+interface Submission {
+  _id: string;
+  title: string;
+  description: string;
+  images: string;
+  date: Date | string;
+  price: string | number;
+}
+
 interface Props {
-  data: Contest[];
+  data: Contest[] | Submission[];
   route: string;
   message: string;
 }
@@ -20,7 +29,7 @@ const ListView = memo(function ListView({ data, message, route }: Props): JSX.El
         <List className={classes.ListContainer}>
           {data.map((item) => {
             return (
-              <Link className={classes.link} to={route} key={item._id}>
+              <Link className={classes.link} to={`${route}/${item._id}`} key={item._id}>
                 <ListItem key={item._id}>
                   <ListItemAvatar>
                     <Avatar className={classes.img} alt="Profile Image" src={item.images[0]} variant="square" />

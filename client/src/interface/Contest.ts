@@ -24,7 +24,13 @@ export interface Contest {
   end_date: Date | string;
   creator: string;
   images: string[];
-  submissions: string[];
+  submissions?: [
+    {
+      _id: string;
+      files: string[];
+      creator: string;
+    },
+  ];
 }
 
 export interface ContestFormState {

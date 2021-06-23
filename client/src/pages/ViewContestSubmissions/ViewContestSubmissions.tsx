@@ -4,28 +4,44 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
+import { useAuth } from '../../context/useAuthContext';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './useStyles';
-// mock data 4 now
-import { Contest, Contests } from '../../interface/tempContestData';
+
 import { Submissions } from '../../interface/tempSubmissionData';
-// Used to test the two views. 1 is the id of the contest owner and shows the owner view(view all submissions, pick winner). 2 shows the submittor view(contest deets and submit button)
-const contestOwnerId = 11;
+import { getContestById } from '../../helpers/APICalls/contest';
+import { RouteComponentProps, useParams } from 'react-router-dom';
+import { Contest } from '../../interface/Contest';
+
+interface RouteParams {
+  id: string;
+}
 
 export default function ViewContestSubmissions(): JSX.Element {
   const classes = useStyles();
   const [contestCard, setContestCard] = useState<Contest>(Object);
   const [winnerIndex, setWinnerIndex] = useState(-1);
+  const { loggedInUser } = useAuth();
 
-  //   pulling dummy data for now
-  const handleContest = () => {
-    setContestCard(Contests[0]);
-  };
+  const params = useParams<RouteParams>();
 
   useEffect(() => {
-    handleContest();
-  }, [contestCard]);
+    async function fetchContestById() {
+      const response = await getContestById(params.id);
 
+      if (response) {
+        const contest = response.contest;
+        if (contest) {
+          setContestCard(contest);
+        }
+      }
+    }
+    fetchContestById();
+  }, [params]);
+  if (contestCard && loggedInUser) {
+  }
+  if (loggedInUser === undefined) return <CircularProgress />;
   const handleWinnerIndex = (index: number) => {
     setWinnerIndex(index);
   };
@@ -76,19 +92,18 @@ export default function ViewContestSubmissions(): JSX.Element {
         </Grid>
         <Grid container className={classes.submitButton}>
           <Grid className={classes.authorInfo} item>
-            <Avatar alt={contestCard.creator} src={contestCard.images} />
             <Typography className={classes.creatorName} variant="h6" color="textPrimary">
               By {contestCard.creator}
             </Typography>
           </Grid>
-          {contestCard.id !== contestOwnerId ? (
+          {contestCard.creator !== loggedInUser?.id ? (
             <Grid item>
               <Button className={classes.accBtn}>Submit</Button>
             </Grid>
           ) : null}
         </Grid>
       </Box>
-      {contestCard.id === contestOwnerId ? (
+      {contestCard.creator === loggedInUser?.id ? (
         <Box boxShadow={1} className={classes.submissionsBox}>
           <Grid container justify="center" className={classes.contestImages}>
             <GridList cellHeight={300} cols={4} spacing={30} className={classes.imageGridList}>

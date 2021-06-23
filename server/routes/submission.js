@@ -8,6 +8,7 @@ const {
   createSubmission,
   getSubmissionById,
   getAllSubmissions,
+  getSubmissionsForUser,
 } = require("../controllers/submission");
 const { validateSubmission } = require("../validate");
 
@@ -19,8 +20,6 @@ router.route("/").post(function (req, res, next) {
       res.send(err);
     } else if (err) {
       res.send(err);
-    } else if (!req.files) {
-      res.send("Please select an image to upload");
     }
     createSubmission(req, res, next);
   });
@@ -28,5 +27,6 @@ router.route("/").post(function (req, res, next) {
 //providing data back to the controller in the format of contest_id/ creator ID/
 router.route("/submissions/:id/:creator/").get(getAllSubmissions);
 router.route("/:id/:creator").get(getSubmissionById);
+router.route("/user").get(getSubmissionsForUser);
 
 module.exports = router;

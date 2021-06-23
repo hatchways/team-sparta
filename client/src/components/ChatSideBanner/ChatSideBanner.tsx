@@ -39,10 +39,8 @@ const ChatSideBanner = ({ loggedInUser }: Props): JSX.Element => {
           >
             <DashboardNav to="/" primary="Discover" />
             <DashboardNav to="/message" primary="Message" />
-            <DashboardNav to="/viewcontestsubmissions" primary="View Submissions" />
           </ThemeProvider>
 
-          <Notification />
           <ThemeProvider<MyTheme>
             theme={(outerTheme) => ({
               ...outerTheme,
@@ -50,7 +48,6 @@ const ChatSideBanner = ({ loggedInUser }: Props): JSX.Element => {
             })}
           >
             <DashboardNav to="/contestForm" primary="Create Contest" />
-            <DashboardNav to="/submission" primary="Create Submission" />
           </ThemeProvider>
           <div className={classes.account}>
             <AvatarDisplay loggedIn user={loggedInUser} />
