@@ -1,6 +1,7 @@
 export interface User {
   email: string;
   username: string;
+  profileImage: string;
 }
 
 export interface SearchUsersApiData {

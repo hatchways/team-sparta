@@ -113,3 +113,42 @@ exports.removeCustomer = asyncHandler(async (req, res, next) => {
     });
   }
 });
+
+exports.updateUser = asyncHandler(async (req, res, next) => {
+  const { files } = req.body;
+  console.log(req.body);
+  const userId = req.user.id;
+
+  // const user = await User.findById(userId);
+
+  // if (!user) {
+  //   res.status(404);
+  //   throw new Error("No user found");
+  // }
+
+  // imageLocation = files;
+
+  // if(!imageLocation[0]){
+  //   res.status(507);
+  //   throw new Error("Server storage full");
+  // }
+
+  // let createdUser = await User.findByIdAndUpdate(
+  //   userId,
+  //   {
+  //     profileImage: imageLocation[0]
+  //   },
+  //   { new: true }
+  // );
+
+  // if (createdUser) {
+  //   res.status(201).json({
+  //     success: {
+  //       user: createdUser,
+  //     },
+  //   });
+  // } else {
+  //   res.status(500);
+  //   throw new Error("Could not update Profile Image at this time, Please try again");
+  // }
+});
