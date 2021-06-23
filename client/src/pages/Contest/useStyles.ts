@@ -113,9 +113,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
     '&:hover': { color: 'black', backgroundColor: 'white' },
   },
-  // selectWinnerText: {
-  //   marginTop: '25px',
-  // },
 }));
 
 export default useStyles;

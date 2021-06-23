@@ -8,14 +8,11 @@ import { useAuth } from '../../context/useAuthContext';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './useStyles';
-// mock data 4 now
-//import { Contest as Contesto, Contests } from '../../interface/tempContestData';
+
 import { Submissions } from '../../interface/tempSubmissionData';
 import { getContestById } from '../../helpers/APICalls/contest';
 import { RouteComponentProps, useParams } from 'react-router-dom';
 import { Contest } from '../../interface/Contest';
-// Used to test the two views. 1 is the id of the contest owner and shows the owner view(view all submissions, pick winner). 2 shows the submittor view(contest deets and submit button)
-const contestOwnerId = 11;
 
 interface RouteParams {
   id: string;
@@ -28,16 +25,6 @@ export default function ViewContestSubmissions(): JSX.Element {
   const { loggedInUser } = useAuth();
 
   const params = useParams<RouteParams>();
-
-  console.log(params);
-  //   pulling dummy data for now
-  // const handleContest = () => {
-  //   setContestCard(Contests[0]);
-  // };
-
-  // useEffect(() => {
-  //   handleContest();
-  // }, [contestCard]);
 
   useEffect(() => {
     async function fetchContestById() {
@@ -53,8 +40,6 @@ export default function ViewContestSubmissions(): JSX.Element {
     fetchContestById();
   }, [params]);
   if (contestCard && loggedInUser) {
-    console.log('user ID', loggedInUser.id);
-    console.log('infinite ', contestCard);
   }
   if (loggedInUser === undefined) return <CircularProgress />;
   const handleWinnerIndex = (index: number) => {
@@ -107,7 +92,6 @@ export default function ViewContestSubmissions(): JSX.Element {
         </Grid>
         <Grid container className={classes.submitButton}>
           <Grid className={classes.authorInfo} item>
-            {/* <Avatar alt="Profile Image" src={`https://robohash.org/${loggedInUser.email}.png`} /> */}
             <Typography className={classes.creatorName} variant="h6" color="textPrimary">
               By {contestCard.creator}
             </Typography>

@@ -8,18 +8,12 @@ import { useAuth } from '../../context/useAuthContext';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './useStyles';
-// mock data 4 now
-//import { Contest as Contesto, Contests } from '../../interface/tempContestData';
-import { Submission, Submissions } from '../../interface/tempSubmissionData';
 import { getContestById } from '../../helpers/APICalls/contest';
 import { useParams } from 'react-router-dom';
 import { Contest } from '../../interface/Contest';
 import moment from 'moment';
 import Modal from '@material-ui/core/Modal';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-
-// Used to test the two views. 1 is the id of the contest owner and shows the owner view(view all submissions, pick winner). 2 shows the submittor view(contest deets and submit button)
 
 interface RouteParams {
   id: string;
