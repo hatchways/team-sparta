@@ -135,7 +135,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
   let createdUser = await User.findByIdAndUpdate(
     userId,
     {
-      profileImage: imageLocation[0]
+      profileImage: imageLocation
     },
     { new: true }
   );
