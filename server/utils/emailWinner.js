@@ -15,7 +15,7 @@ const emailWinner = (email, name) => {
 
   sgMail.send(msg, function (err, info) {
     if (err) {
-      console.log("email not sent");
+      console.log("error", err);
     } else {
       console.log("email SENT!");
     }
