@@ -25,17 +25,17 @@ interface RouteParams {
   id: string;
 }
 
-interface sub {
+interface submissionResponse {
   files: string[];
   _id: string;
   creator: string;
+  is_winner: boolean;
 }
 
 export default function Contestt(): JSX.Element {
   const classes = useStyles();
   const [contestCard, setContestCard] = useState<Contest>(Object);
-  const [submissions, setSubmissions] = useState<[sub]>();
-  const [winnerIndex, setWinnerIndex] = useState(-1);
+  const [submissions, setSubmissions] = useState<[submissionResponse]>();
   const [tempIndex, setTempIndex] = useState(0);
   const [contestEnded, setContestEnded] = useState(false);
   const [openModal, setModal] = useState(false);
@@ -54,14 +54,12 @@ export default function Contestt(): JSX.Element {
 
       if (response) {
         const contest = response.contest;
-        console.log('response', contest);
         if (contest) {
           setContestCard(contest);
           if (moment.utc(contest.end_date).format('YYYY-MM-DD') <= moment().format('YYYY-MM-DD')) {
             setContestEnded(true);
           }
           if (contest.submissions) {
-            console.log('contest submissions', contest.submissions);
             setSubmissions(contest.submissions);
           }
         }
@@ -74,16 +72,23 @@ export default function Contestt(): JSX.Element {
   const handleWinnerIndex = (index: number) => {
     setTempIndex(index);
     setModal(true);
-    console.log('card', contestCard);
-    console.log('choose winner', contestEnded);
   };
 
   //This is a work in progress will be changed in next PR
   const selectWinner = async () => {
     console.log(tempIndex);
 
-    const response = await fetch('/contest/winner');
-    console.log('response', response);
+    if (submissions) {
+      console.log('submissions', submissions);
+
+      const data = {
+        id: submissions[tempIndex]._id,
+        user: submissions[tempIndex].creator,
+        price: contestCard.price,
+      };
+      const response = await axios.post('/contest/winner', data);
+      console.log('response', response);
+    }
   };
 
   const renderImageList = (): JSX.Element[] | JSX.Element => {
@@ -93,7 +98,7 @@ export default function Contestt(): JSX.Element {
           <img src={tile.files[0]} />
           <GridListTileBar
             actionIcon={
-              index >= 0 && index === winnerIndex ? (
+              tile.is_winner ? (
                 <IconButton key={index} onClick={() => handleWinnerIndex(index)} className={classes.icon}>
                   <Chip className={classes.winnerTag} label="Winner"></Chip>
                 </IconButton>

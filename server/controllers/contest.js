@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const Contest = require("../models/Contest");
 const asyncHandler = require("express-async-handler");
+const emailWinner = require("../utils/emailWinner");
+const Submission = require("../models/Submission");
 const stripe = require("stripe")(process.env.StripeKeyBackend);
 
 exports.getContestById = asyncHandler(async (req, res, next) => {
@@ -8,7 +10,7 @@ exports.getContestById = asyncHandler(async (req, res, next) => {
 
   let contest = await Contest.findById(contestId).populate(
     "submissions",
-    "_id files creator"
+    "_id files creator is_winner"
   );
 
   if (!contest) {
@@ -177,22 +179,41 @@ exports.createContestCharge = asyncHandler(async (req, res, next) => {
   }
 });
 
-//This function is not complete yet it will be updated
-// The values are just for testing on stripe since we will
-// not be actually transferring money to any accounts
+/**
+ * Summary.
+ * After contest ends, owner of contest can select a winnning submission
+ * which will trigger this funciton. Since we are using fake stripe accounts
+ * for testing the stated fields below are needed for stripe to know this is
+ * only an immitation of what would happen in production
+ * @param id? string used to identify submission id
+ * @param user string used to identify user of submission
+ * @returns response object
+ *
+ */
 exports.selectContestWinner = asyncHandler(async (req, res, next) => {
+  const { id, user, price } = req.body;
+
+  let userInfo = await User.findById(user);
+  let updatedSubmission = await Submission.findByIdAndUpdate(
+    id,
+    {
+      is_winner: true,
+    },
+    { new: true }
+  );
+
   const account = await stripe.accounts.create({
     type: "custom",
     country: "CA",
-    email: "bob.rosen@example.com",
+    email: userInfo.email,
     business_type: "individual",
     business_profile: {
       product_description: "Demo",
     },
     individual: {
-      first_name: "magic",
+      first_name: "userInfo.username",
       last_name: "user",
-      email: "demo@example.com",
+      email: userInfo.email,
       id_number: 111111234,
       dob: {
         day: 10,
@@ -221,12 +242,14 @@ exports.selectContestWinner = asyncHandler(async (req, res, next) => {
   });
 
   const transfer = await stripe.transfers.create({
-    amount: 400,
+    amount: price,
     currency: "cad",
     destination: "acct_1J2R38Q6sIiNqyks",
   });
 
-  if (transfer) {
+  if (transfer && updatedSubmission) {
+    emailWinner(userInfo.email, userInfo.username);
+
     res.status(200).json({
       message: "Prize Money sent to contest winner",
     });

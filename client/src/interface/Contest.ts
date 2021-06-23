@@ -1,4 +1,3 @@
-
 export interface IContestFields {
   title: string;
   description: string;
@@ -14,7 +13,6 @@ export interface IContestErrors {
   deadline: boolean;
 }
 
-
 export interface Contest {
   _id: string;
   title: string;
@@ -29,6 +27,7 @@ export interface Contest {
       _id: string;
       files: string[];
       creator: string;
+      is_winner: boolean;
     },
   ];
 }
@@ -50,5 +49,4 @@ export interface ContestFormState {
     value: string | Date;
     error: boolean;
   };
-
 }
