@@ -36,6 +36,7 @@ export default function Contestt(): JSX.Element {
   const [openModal, setModal] = useState(false);
   const [openMessage, setMessageToggle] = useState(false);
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const { loggedInUser } = useAuth();
 
@@ -77,6 +78,7 @@ export default function Contestt(): JSX.Element {
 
   const selectWinner = async () => {
     if (submissions) {
+      setIsLoading(true);
       const data = {
         id: submissions[tempIndex]._id,
         user: submissions[tempIndex].creator,
@@ -84,6 +86,7 @@ export default function Contestt(): JSX.Element {
       };
       const response = await axios.post('/contest/winner', data);
       if (response.data) {
+        setIsLoading(true);
         setMessage(response.data.message);
         setMessageToggle(true);
         setModal(false);
@@ -183,7 +186,7 @@ export default function Contestt(): JSX.Element {
                   color="primary"
                   className={classes.submit}
                 >
-                  Yes
+                  {isLoading ? <CircularProgress /> : 'Yes'}
                 </Button>
                 <Button
                   type="button"
