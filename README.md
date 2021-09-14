@@ -2,9 +2,12 @@
 
 This is a little description about your project.
 
-**Tech Stack:** MongoDB, Express.js, React.js, Node.js, Typescript
+**Tech Stack:** MongoDB, Express.js, React.js, Node.js, Typescript, AWS, JWT, Stripe
 
-**Contributors**: [Hatchways](https://github.com/hatchways) (replace)
+**Contributors**: 
+1. [Kevin](https://github.com/kqpham)
+2. [Milad](https://github.com/MiladS95)
+3. [Victor](https://github.com/vicscherman)
 
 ---
 
